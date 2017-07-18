@@ -63,12 +63,15 @@ column | name | explaination
 We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate tracks and loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/).
 ```
 cLoops -f GSM1872886_GSM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1
-```    
-
-1. HiChIP data
+```      
+2. HiChIP data
 We provide a test data of from mESC cohesin HiChIP ([GSE80820](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80820),merged biological and technological replicates for 25 million cells), just the chromosome 19 mapped to mm10. Run the command as following.
 ```
 cLoops -f GSE80820_mESC_cohesin_HiChIP_chr19_mm10.bedpe.gz -o hichip -eps 2000 -minPts 20 -twice 1 -w 1 -hichip 1
+```    
+3. Differential enriched loops
+```
+deloops 
 ```
 
 --------
