@@ -52,9 +52,9 @@ column | name | explaination
 10th | ra | observed PETs number for the left anchor
 11th | rab | observed PETs number linking the left and right anchors
 12th | rb | observed PETs number for the right anchor
-13th | poisson\p_value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
-14th | binomal\p_value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
-15th | hypergeometric\p_value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
+13th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
+14th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
+15th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
 16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP data, significant requiring ES >= 2.0, FDR <=0.01, corrected poisson and binomal p-values <=0.01. You can ignore this and customize your cutoffs.
 
 --------
