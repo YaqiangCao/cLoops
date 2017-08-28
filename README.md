@@ -1,4 +1,4 @@
-# Fine and differential enriched loops calling for protein-centric chromatin conformations with cLoops
+# Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops
 
 # not available yet 
 
