@@ -1,0 +1,32 @@
+2017-09-07 15:19:29 root   INFO     Command line: cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -eps 750 -minPts 5 -p 1 -w False -j False -s False -c  -hic False -cut 0
+2017-09-07 15:19:29 root   INFO     Parsing PETs from GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz, requiring initial distance cutoff > 0
+2017-09-07 15:19:34 root   INFO     Totaly 99674 PETs from GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz, in which 99674 cis PETs
+2017-09-07 15:19:35 root   INFO     Clustering chr21 and chr21 using eps as 750, minPts as 5,pre-set distance cutoff as > 0
+2017-09-07 15:20:03 root   INFO     Clustering chr21 and chr21 finished. Estimated 12677 self-ligation reads and 5596 inter-ligation reads
+2017-09-07 15:20:04 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 6515 for eps=750.
+2017-09-07 15:20:04 root   INFO     Starting estimate significance for interactions
+2017-09-07 15:20:32 root   INFO     cLoops finished. Bye!
+2017-09-07 15:20:37 root   INFO     Command line: cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 20 -p 1 -w False -j False -s False -c  -hic False -cut 0
+2017-09-07 15:20:37 root   INFO     Parsing PETs from GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz, requiring initial distance cutoff > 0
+2017-09-07 15:20:56 root   INFO     Parsing PETs from GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz, requiring initial distance cutoff > 0
+2017-09-07 15:21:19 root   INFO     Totaly 1031294 PETs from GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz, in which 1029564 cis PETs
+2017-09-07 15:21:33 root   INFO     Clustering chr21 and chr21 using eps as 1000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 15:22:42 root   INFO     Clustering chr21 and chr21 finished. Estimated 3888 self-ligation reads and 387 inter-ligation reads
+2017-09-07 15:22:43 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 2468 for eps=1000.
+2017-09-07 15:22:43 root   INFO     Clustering chr21 and chr21 using eps as 2000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 15:28:18 root   INFO     Clustering chr21 and chr21 finished. Estimated 31563 self-ligation reads and 3982 inter-ligation reads
+2017-09-07 15:28:20 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 5569 for eps=2000.
+2017-09-07 15:28:20 root   INFO     Clustering chr21 and chr21 using eps as 4000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 15:36:48 root   INFO     Clustering chr21 and chr21 finished. Estimated 162242 self-ligation reads and 13303 inter-ligation reads
+2017-09-07 15:36:52 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 11400 for eps=4000.
+2017-09-07 15:36:53 root   INFO     Clustering chr21 and chr21 using eps as 6000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 15:44:40 root   INFO     Clustering chr21 and chr21 finished. Estimated 263265 self-ligation reads and 21013 inter-ligation reads
+2017-09-07 15:44:46 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 15371 for eps=6000.
+2017-09-07 15:44:46 root   INFO     Clustering chr21 and chr21 using eps as 8000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 15:54:24 root   INFO     Clustering chr21 and chr21 finished. Estimated 335746 self-ligation reads and 27520 inter-ligation reads
+2017-09-07 15:54:31 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 19335 for eps=8000.
+2017-09-07 15:54:32 root   INFO     Clustering chr21 and chr21 using eps as 10000, minPts as 20,pre-set distance cutoff as > 0
+2017-09-07 16:05:40 root   INFO     Clustering chr21 and chr21 finished. Estimated 397921 self-ligation reads and 30270 inter-ligation reads
+2017-09-07 16:05:48 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 23478 for eps=10000.
+2017-09-07 16:05:49 root   INFO     Starting estimate significance for interactions
+2017-09-07 16:31:57 root   INFO     cLoops finished. Bye!
