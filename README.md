@@ -6,12 +6,13 @@
 By taking the mapped paired-end tags from ChIA-PET or HiChIP as 2D points, the problem for calling loops is converted to draw significant clusters from sparse points with noise. After classifying the detected clusters into self-ligation and inter-ligation clusters, the significances of the inter-ligation clusters are estimated using permuted local backgrounds. We implemented the approach in the “cLoops (see loops)” package. Although without the peak calling step, the anchors determined by cLoops shows a high overlap with the peaks. By comparing to peaks based loop calling tools, we show that cLoops can detect more interactions with better ranked p-values, better supported by Hi-C data, sharper anchors, higher enrichment for TF motifs, work well both for sharp and broad peak like ChIA-PET data.
 
 If you find cLoops is useful, please cite our paper:    
-*** Fine and differential enriched loops calling for protein-centric chromatin conformations with cLoops ***
+**Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops**
 
 --------
 ## Install
-[scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/),[HTSeq](https://github.com/simon-anders/htseq) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
+[scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
+wget 
 tar xvzf cLoops.tar.gz
 cd cLoops
 python setup.py install    
@@ -26,7 +27,7 @@ Please refer to [here](https://docs.python.org/2/install/index.html) to install 
 
 --------
 ## Usage
-Run ***cLoops -h*** to see all options. Key parameters are ***eps***, ***minPts*** and ***twice***. ***minPts*** defines at least how many PETs are required for a candidate loop, ***eps*** defines the distance requried for two PETs being neighbors. For ChIA-PET data with sharp peaks like ChIA-PET data, cLoops can auto estimate ***eps*** from the data as 2 fold of the fragment size, and ***minPts***=5 is good. For ChIA-PET data with broad peaks (like H3K4me1), empirical experience is set ***eps*** to 2000. For HiChIP, ***eps***=5000 & ***minPts***=20 worth a first trial. For practically usage, using the PETs in the smallest chromosome except chrY and chrM, then run a series of ***eps***, choose the smallest ***eps*** that can get well seperated inter-ligation and self-ligation PETs distance distributions. The ***twice*** model means first run with the input or auto estimated ***eps***, then using the self-ligation clusters re-estimate a ***eps*** and the distance cutoff for self-ligation PETs, cLoops then runs the clustering again with the new ***eps*** and distance cutoff, the final candidate loops are combined with the first round and second round clustering. The mode is good for not a ideal ***eps***.
+Run ***cLoops -h*** to see all options. Key parameters are ***eps*** and ***minPts***  ***minPts*** defines at least how many PETs are required for a candidate loop, ***eps*** defines the distance requried for two PETs being neighbors. For ChIA-PET data with sharp peaks, cLoops can auto estimate ***eps*** from the data as 2 fold of the fragment size, and ***minPts***=5 is good. For ChIA-PET data with broad peaks (like H3K4me1), empirical experience is set ***eps*** to 2000. For HiChIP, set a series ***eps***=2000,4000,6000,8000,10000 & ***minPts***=20 worth a first trial, if sequencing deep, increase ***minPts*** to 30 or 50. For practically usage, using the PETs in the smallest chromosome except chrY and chrM, then run a series of ***eps***, choose the smallest ***eps*** that can get well seperated inter-ligation and self-ligation PETs distance distributions. 
 
 --------
 ### Input  
@@ -34,7 +35,7 @@ Mapped PETs in [BEDPE format](http://bedtools.readthedocs.io/en/latest/content/g
 
 --------
 ### Output
-The main output is a loop file and a PDF file for the plot of self-ligation and inter-ligation PETs distance distributions.
+The main output is a loop file and a PDF file or PDFs for the plot of self-ligation and inter-ligation PETs distance distributions.
 For the .loop file, columns and explaination are as follwing:
 
 column | name | explaination
@@ -55,24 +56,24 @@ column | name | explaination
 13th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
 14th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
 15th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
-16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, sqrt(binomal\_p-value * poisson\_p-value) <=1e-3. You can ignore this and customize your cutoffs by visualization such like in the [Juicebox](https://github.com/theaidenlab/juicebox) to determine your cutoffs.
+16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, sqrt(binomal\_p-value * poisson\_p-value) <=1e-5. You can ignore this and customize your cutoffs by visualization such like in the [Juicebox](https://github.com/theaidenlab/juicebox) to determine your cutoffs.
 
 --------
 ## Examples
 1. ChIA-PET data
-We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate tracks and loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/).
+We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/),**-j** option will generate loops for visualization in [Juicebox](https://github.com/theaidenlab/juicebox) .
 ```
-cLoops -f GSM1872886_GSM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1
+wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
+cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet
 ```      
+
 2. HiChIP data
-We provide a test data of from mESC cohesin HiChIP ([GSE80820](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE80820),merged biological and technological replicates for 25 million cells), just the chromosome 19 mapped to mm10. Run the command as following.
+We provide two data of from GM12878 cohesin HiChIP of two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by deLoops,jd2washU and jd2juice.***-hic*** option means using cutoffs design for Hi-C like data, see above. 
 ```
-cLoops -f GSE80820_mESC_cohesin_HiChIP_chr19_mm10.bedpe.gz -o hichip -eps 2000 -minPts 20 -twice 1 -w 1 -hichip 1
+wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz 
+wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
+cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 20 -s 1 -hic 1
 ```    
-3. Differential enriched loops
-```
-deloops 
-```
 
 --------
 ## Questions & Answers  
