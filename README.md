@@ -68,6 +68,8 @@ We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
 cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -j 1
 ```      
+For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following. If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
+![](https://github.com/YaqiangCao/cLoops/blob/master/examples/chiapet_disCutoff.pdf)
 
 2. HiChIP data   
 We provide two data of from GM12878 cohesin HiChIP of two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by deLoops,jd2washU (BEDTOOLS needed) and jd2juice (Juicer needed).***-hic*** option means using cutoffs design for Hi-C like data, see above. 
