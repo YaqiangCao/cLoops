@@ -6,7 +6,7 @@
 By taking the mapped paired-end tags from ChIA-PET or HiChIP as 2D points, the problem for calling loops is converted to draw significant clusters from sparse points with noise. After classifying the detected clusters into self-ligation and inter-ligation clusters, the significances of the inter-ligation clusters are estimated using permuted local backgrounds. We implemented the approach in the “cLoops (see loops)” package. Although without the peak calling step, the anchors determined by cLoops shows a high overlap with the peaks. By comparing to peaks based loop calling tools, we show that cLoops can detect more interactions with better ranked p-values, better supported by Hi-C data, sharper anchors, higher enrichment for TF motifs, work well both for sharp and broad peak like ChIA-PET data.
 
 If you find cLoops is useful, please cite our paper:    
-**Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops**
+**### Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops ###**
 
 --------
 ## Install
