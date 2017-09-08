@@ -1,0 +1,48 @@
+2017-05-27 08:05:32 root   INFO     Clustering chr3 and chr3 using eps as 750 minPts as 5
+2017-05-27 08:06:02 root   INFO     Clustering chr4 and chr4 using eps as 750 minPts as 5
+2017-05-27 08:06:46 root   INFO     Clustering chr5 and chr5 using eps as 750 minPts as 5
+2017-05-27 08:07:38 root   INFO     Clustering chr6 and chr6 using eps as 750 minPts as 5
+2017-05-27 08:08:14 root   INFO     Clustering chr7 and chr7 using eps as 750 minPts as 5
+2017-05-27 08:08:36 root   INFO     Clustering chr12 and chr12 using eps as 750 minPts as 5
+2017-05-27 08:09:01 root   INFO     Clustering chr11 and chr11 using eps as 750 minPts as 5
+2017-05-27 08:09:28 root   INFO     Clustering chr8 and chr8 using eps as 750 minPts as 5
+2017-05-27 08:10:04 root   INFO     Clustering chr10 and chr10 using eps as 750 minPts as 5
+2017-05-27 08:10:22 root   INFO     Clustering chrX and chrX using eps as 750 minPts as 5
+2017-05-27 08:10:39 root   INFO     Clustering chr9 and chr9 using eps as 750 minPts as 5
+2017-05-27 08:10:55 root   INFO     Clustering chr13 and chr13 using eps as 750 minPts as 5
+2017-05-27 08:11:16 root   INFO     Clustering chr14 and chr14 using eps as 750 minPts as 5
+2017-05-27 08:11:37 root   INFO     Clustering chr17 and chr17 using eps as 750 minPts as 5
+2017-05-27 08:11:56 root   INFO     Clustering chr15 and chr15 using eps as 750 minPts as 5
+2017-05-27 08:12:13 root   INFO     Clustering chr18 and chr18 using eps as 750 minPts as 5
+2017-05-27 08:12:31 root   INFO     Clustering chr16 and chr16 using eps as 750 minPts as 5
+2017-05-27 08:12:49 root   INFO     Clustering chr19 and chr19 using eps as 750 minPts as 5
+2017-05-27 08:13:13 root   INFO     Clustering chr20 and chr20 using eps as 750 minPts as 5
+2017-05-27 08:13:23 root   INFO     Clustering chr22 and chr22 using eps as 750 minPts as 5
+2017-05-27 08:13:31 root   INFO     Clustering chr21 and chr21 using eps as 750 minPts as 5
+2017-05-27 08:13:32 root   INFO     Clustering chrM and chrM using eps as 750 minPts as 5
+2017-05-27 08:25:36 root   INFO     Clustering finished for chrM and chrM! Time ratio as 0.155400440852,0.16404494382,0.155463695183,0.163321737579,0.172112867255, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:30:28 root   INFO     Clustering finished for chr21 and chr21! Time ratio as 0.0649511978705,0.0652123191787,0.0650657053146,0.0685547445255,0.0672624920202, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:34:35 root   INFO     Clustering finished for chr13 and chr13! Time ratio as 0.0935246610903,0.0689733237747,0.0930591051073,0.0663727552176,0.0677534180083, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:38:43 root   INFO     Clustering finished for chr19 and chr19! Time ratio as 0.140092986999,0.0845597510722,0.0851395143302,0.0858887952822,0.115796604429, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:38:58 root   INFO     Clustering finished for chr22 and chr22! Time ratio as 0.0787362792007,0.0845779969489,0.0925158795913,0.0840882402281,0.0742095526404, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:47:02 root   INFO     Clustering finished for chr10 and chr10! Time ratio as 0.082680486923,0.0982333774565,0.0753783021288,0.0746774069418,0.0873116063378, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:51:20 root   INFO     Clustering finished for chr20 and chr20! Time ratio as 0.0738686733326,0.0756546401952,0.0862541073384,0.104387747422,0.0686659023713, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:52:29 root   INFO     Clustering finished for chr18 and chr18! Time ratio as 0.0518684999119,0.0695184676612,0.0656236523072,0.0890238793465,0.080181813539, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:55:06 root   INFO     Clustering finished for chr16 and chr16! Time ratio as 0.0681857059769,0.0825576847869,0.0806950569341,0.128112434985,0.0900817522752, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:55:21 root   INFO     Clustering finished for chr11 and chr11! Time ratio as 0.10818258506,0.0951856317299,0.0785272753762,0.0890790240653,0.07832202755, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:57:13 root   INFO     Clustering finished for chr15 and chr15! Time ratio as 0.0629155439341,0.0875239727771,0.0908244887106,0.0770978693827,0.116817447988, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 08:57:17 root   INFO     Clustering finished for chr12 and chr12! Time ratio as 0.0848864010537,0.0943544063673,0.0779335762967,0.0884645523158,0.073285281601, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:15:53 root   INFO     Clustering finished for chr17 and chr17! Time ratio as 0.0744575482563,0.0893966251204,0.0885146135359,0.125782027918,0.0809385968592, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:16:20 root   INFO     Clustering finished for chr8 and chr8! Time ratio as 0.0584847757726,0.0732984293194,0.0753704250552,0.0901207903368,0.062481448501, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:16:57 root   INFO     Clustering finished for chr14 and chr14! Time ratio as 0.0750205716592,0.0780070324421,0.0891592860796,0.0975719164207,0.0744600912835, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:21:04 root   INFO     Clustering finished for chr9 and chr9! Time ratio as 0.0646945718089,0.0751827838323,0.0870989668298,0.0626544793173,0.0884943740923, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:30:16 root   INFO     Clustering finished for chr7 and chr7! Time ratio as 0.0448723265596,0.0767671172169,0.0656345786504,0.0733946993952,0.0667102319296, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:39:27 root   INFO     Clustering finished for chr4 and chr4! Time ratio as 0.0668270103467,0.0633793018783,0.0693459416864,0.064232746068,0.0604754038693, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:40:27 root   INFO     Clustering finished for chr5 and chr5! Time ratio as 0.0981053724371,0.0643089172752,0.0788895940175,0.0730416827978,0.0538344938658, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:42:19 root   INFO     Clustering finished for chrX and chrX! Time ratio as 0.0684533612816,0.092832737227,0.0830866173235,0.0829092070335,0.0884740746666, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 09:43:21 root   INFO     Clustering finished for chr6 and chr6! Time ratio as 0.0815922523677,0.0709054569856,0.0617010098652,0.087065281928,0.0527469795093, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 10:07:32 root   INFO     Clustering finished for chr3 and chr3! Time ratio as 0.0613448655274,0.0755321374405,0.0712593130244,0.0548869973584,0.0683410748775, ADI as 1.0,1.0,1.0,1.0,1.0
+2017-05-27 15:28:45 root   INFO     Clustering chr1 and chr1 using eps as 750 minPts as 5
+2017-05-27 15:29:49 root   INFO     Clustering chr2 and chr2 using eps as 750 minPts as 5
+2017-05-29 21:56:52 root   INFO     Clustering finished for chr2 and chr2! Time ratio as 0.000642362382376,0.00064595224447, ADI as 1.0,1.0
+2017-05-30 02:36:54 root   INFO     Clustering finished for chr1 and chr1! Time ratio as 0.00143950225967,0.000625993394009, ADI as 1.0,1.0

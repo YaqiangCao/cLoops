@@ -1,0 +1,11 @@
+2017-05-22 21:09:07 root   INFO     Command line: cLoops -f chr12-chr12.bedpe -o test -eps 0 -minPts 5 -m 0 -p 1 -w 1 -j 0 -t 1 -s 0 -c chr12 -second 0
+2017-05-22 21:09:07 root   INFO     Parsing PETs from chr12-chr12.bedpe
+2017-05-22 21:10:16 root   INFO     Totaly 8040304 PETs from chr12-chr12.bedpe, in which 608329 cis PETs and 0 trans PETs from chr12-chr12.
+2017-05-22 21:10:18 root   INFO     Reading test/chr12-chr12.bedpe for clustering
+2017-05-22 21:10:30 root   INFO     Reading test/chr12-chr12.bedpe finished
+2017-05-22 21:10:30 root   INFO     Clustering chr12 and chr12 using eps as 748, minPts as 5
+2017-05-22 21:20:11 root   INFO     Clustering chr12 and chr12 finished. Estimated 93836 self-ligation reads and 45540 inter-ligation reads
+2017-05-22 21:20:12 root   INFO     Estimated inter-ligation and self-ligation distance cutoff as 7164,re-estimated fragment size as 555
+2017-05-22 21:20:15 root   INFO     Starting estimate significance for interactions
+2017-05-22 21:30:10 root   INFO     Interactions write to test_self-ligated.bedpe
+2017-05-22 21:30:10 root   INFO     cLoops finished. Bye!
