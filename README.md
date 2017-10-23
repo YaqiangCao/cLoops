@@ -1,4 +1,4 @@
-# Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops
+# cLoops: a clustering based loops calling for ChIA-PET, HiChIP and Hi-C
 
 # not available yet 
 
@@ -81,7 +81,13 @@ We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. R
 ```
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz 
 cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -eps 2000,4000,6000,8000,10000 -minPts 30 -s 1 -hic 1
-```    
+```   
+
+4. Fingerprint plot for data qualities comparasion of loops calling 
+Run following and you will get [a PDF plot](), the far from the random line, the better for the data used to call loops by cLoops.
+```
+jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
+```
 
 
 --------
