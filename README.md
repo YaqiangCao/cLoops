@@ -84,7 +84,7 @@ cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -eps 
 ```   
 
 4. Fingerprint plot for data qualities comparasion of loops calling 
-Run following and you will get [a PDF plot](), the far from the random line, the better for the data used to call loops by cLoops.
+Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops/blob/master/examples/compare_fingerprint.pdf), the far from the random line, the better for the data used to call loops by cLoops.
 ```
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 ```
