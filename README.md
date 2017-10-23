@@ -3,10 +3,13 @@
 # not available yet 
 
 ## Introduction
-By taking the mapped paired-end tags from ChIA-PET or HiChIP as 2D points, the problem for calling loops is converted to draw significant clusters from sparse points with noise. After classifying the detected clusters into self-ligation and inter-ligation clusters, the significances of the inter-ligation clusters are estimated using permuted local backgrounds. We implemented the approach in the “cLoops (see loops)” package. Although without the peak calling step, the anchors determined by cLoops shows a high overlap with the peaks. By comparing to peaks based loop calling tools, we show that cLoops can detect more interactions with better ranked p-values, better supported by Hi-C data, sharper anchors, higher enrichment for TF motifs, work well both for sharp and broad peak like ChIA-PET data.
+Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm called cDBSCAN. The significances of the inter-ligation clusters are then estimated using permutated local background. Both steps are data type independent, and thus enable cLoops to be applicable to even new genome-wide interaction mapping to be developed in the future.
+
+Basic workflow of cLoops is as following:
+![]()
 
 If you find cLoops is useful, please cite our paper:    
-### Clustering based loops calling for ChIA-PET, HiChIP and high resolution Hi-C data with cLoops ###
+### cLoops: a clustering based loops calling method for ChIA-PET, HiChIP and Hi-C ###
 
 --------
 ## Install
@@ -18,11 +21,6 @@ cd cLoops
 python setup.py install    
 ```
 
-or just
-
-```
-pip install cLoops
-```
 Please refer to [here](https://docs.python.org/2/install/index.html) to install cLoops to customized path.
 
 --------
@@ -31,7 +29,7 @@ Run ***cLoops -h*** to see all options. Key parameters are ***eps*** and ***minP
 
 --------
 ### Input  
-Mapped PETs in [BEDPE format](http://bedtools.readthedocs.io/en/latest/content/general-usage.html), compressed files with gzip are also accepected, first 6 columns as following are necessary: chrom1,start1,end1,chrom2,start2,end2.
+Mapped PETs in [BEDPE format](http://bedtools.readthedocs.io/en/latest/content/general-usage.html), compressed files with gzip are also accepected, following columns are necessary: chrom1 (1st),start1 (2),end1 (3),chrom2 (4),start2 (5),end2 (6),strand1 (9),strand2 (10). For the column of name or score, "." is accepcted.
 
 --------
 ### Output
@@ -56,7 +54,7 @@ column | name | explaination
 13th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
 14th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
 15th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
-16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, sqrt(binomal\_p-value * poisson\_p-value) <=1e-5. You can ignore this and customize your cutoffs by visualization such like in the [Juicebox](https://github.com/theaidenlab/juicebox) to determine your cutoffs.
+16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, both binomal\_p-value and poisson\_p-value <=1e-5. You can ignore this and customize your cutoffs by visualization in the [Juicebox](https://github.com/theaidenlab/juicebox) or [washU](http://epigenomegateway.wustl.edu/) to determine your cutoffs.
 
 --------
 ## Examples
@@ -71,7 +69,7 @@ cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -
 For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like [this](https://github.com/YaqiangCao/cLoops/blob/master/examples/chiapet_disCutoff.pdf). If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
 
 2. HiChIP data   
-We provide two data of from GM12878 cohesin HiChIP of two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by deLoops,jd2washU (BEDTOOLS needed) and jd2juice (Juicer needed).***-hic*** option means using cutoffs design for Hi-C like data, see above. 
+We provide two data of from GM12878 cohesin HiChIP of two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by scripts of deLoops,jd2washU (BEDTOOLS needed), jd2juice (Juicer needed), jd2fingerprint,jd2saturation.***-hic*** option means using cutoffs design for Hi-C like data, see above. 
 ```
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz 
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
