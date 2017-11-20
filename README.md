@@ -81,7 +81,7 @@ wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples
 cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 50 -s 1 -hic 1 -w 1 -j 1
 ```    
 
-3. HiC data   
+3. Hi-C data   
 We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. Run the the command as following to call loops.
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz 
