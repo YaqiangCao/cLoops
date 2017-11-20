@@ -13,9 +13,9 @@ If you find cLoops is useful, please cite our paper:
 ## Install
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
-wget 
+wget https://github.com/YaqiangCao/cLoops/archive/0.5.tar.gz -O cLoops.tar.gz
 tar xvzf cLoops.tar.gz
-cd cLoops
+cd cLoops-0.5
 python setup.py install    
 ```
 
