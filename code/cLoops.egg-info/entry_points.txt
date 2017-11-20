@@ -1,0 +1,3 @@
+[console_scripts]
+cLoops = cLoops.pipe:main
+
