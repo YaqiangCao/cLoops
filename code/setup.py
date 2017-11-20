@@ -16,7 +16,7 @@ setup(name='cLoops',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         ],
     packages=find_packages(exclude=['tests','docs']),
-    long_description=open('README').read(),
+    long_description=open('README.md').read(),
     #setup_requires=["joblib","numpy","seaborn","pandas","scipy","HTSeq"],
     entry_points={
         'console_scripts': [
