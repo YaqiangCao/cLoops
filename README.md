@@ -63,7 +63,7 @@ column | name | explaination
 
 --------
 ## Examples
-All following examples source data, result and log file can be found in the [examples](https://github.com/YaqiangCao/cLoops/tree/master/examples).
+All following examples source data, result and log file can be found in the [examples](https://github.com/YaqiangCao/cLoops_supplementaryData/tree/master/examples).
 
 1. ChIA-PET data    
 We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/),**-j** option will generate loops for visualization in [Juicebox](https://github.com/theaidenlab/juicebox) .
