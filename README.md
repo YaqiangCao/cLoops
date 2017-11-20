@@ -1,7 +1,5 @@
 # cLoops: a clustering based loops calling for ChIA-PET, HiChIP and Hi-C
 
-# not available yet 
-
 ## Introduction
 Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm called cDBSCAN. The significances of the inter-ligation clusters are then estimated using permutated local background. Both steps are data type independent, and thus enable cLoops to be applicable to even new genome-wide interaction mapping to be developed in the future.
 
@@ -15,7 +13,7 @@ If you find cLoops is useful, please cite our paper:
 ## Install
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
-wget 
+wget https://raw.githubusercontent.com/YaqiangCao/cLoops/master/cLoops-0.5.tar.gz
 tar xvzf cLoops.tar.gz
 cd cLoops
 python setup.py install    
