@@ -94,6 +94,9 @@ Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops
 ```
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 ```
+--------
+## Other data  
+In theory cLoops could be applied to more 3D genomic data as long as there are enriched clusters in the heatmap, however, parameters and significance cutoffs should be tuned. We're now trying to make cLoops work for [GRID-seq](https://www.nature.com/articles/nbt.3968) and [Capture HiC](https://www.nature.com/articles/ng.3286). If you have designed a new sequencing based 3D genomic method and want to try cLoops, please contact caoyaqiang@picb.ac.cn first.
 
 
 --------
