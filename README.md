@@ -72,7 +72,19 @@ We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
 cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -j 1
 ```      
-For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like [this](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/chiapet_disCutoff.pdf). If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
+For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following, the two kinds of PETs well seperated:
+<img src="https://github.com/YaqiangCao/cLoops/blob/master/pngs/chiapet_disCutoff.png" width="100%" alt="Overview">
+
+If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
+
+We recommend washU to visualize the loops, by the script jd2washU we can convert the cLoops temp files to washU long range track, and [bedtools](http://bedtools.readthedocs.io/en/latest/),[bgzip & tabix](http://www.htslib.org/doc/tabix.html) are needed in the command enviroment. 
+```
+jd2washU -d chiapet -o chiapet       
+``` 
+
+With other ChIP-seq data, you can get following plot:
+<img src="https://github.com/YaqiangCao/cLoops/blob/master/pngs/chiapet_washU.png" width="100%" alt="Overview">
+
 
 2. HiChIP data   
 We provide test data of GM12878 cohesin HiChIP two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by scripts of deLoops, jd2washU (BEDTOOLS needed), jd2juice (Juicer needed), jd2fingerprint and jd2saturation. ***-hic*** option means using cutoffs design for Hi-C like data, see above. 
@@ -81,6 +93,13 @@ wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
 cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 50 -s 1 -hic 1 -w 1 -j 1
 ```    
+Then use jd2juice to convert cLoops temp files to hic file for juicebox:
+```
+jd2juice -d hichip -o hichip -org hg38 
+``` 
+With the adjustment of resolution, color range and how to show the loops, then you can get following visualization:
+![](https://github.com/YaqiangCao/cLoops/blob/master/pngs/hichip_juicebox_example.png) 
+
 
 3. Hi-C data   
 We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. Run the the command as following to call loops.
