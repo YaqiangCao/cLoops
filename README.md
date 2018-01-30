@@ -66,7 +66,7 @@ column | name | explaination
 ## Examples
 All following examples source data, result and log file can be found in the [examples](https://github.com/YaqiangCao/cLoops_supplementaryData/tree/master/examples).
 
-1. ChIA-PET data    
+### 1. ChIA-PET data    
 We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/),**-j** option will generate loops for visualization in [Juicebox](https://github.com/theaidenlab/juicebox) .
 ```
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
@@ -86,7 +86,7 @@ With other ChIP-seq data, you can get following plot:
 <img src="https://github.com/YaqiangCao/cLoops/blob/master/pngs/chiapet_washU.png" width="100%" alt="Overview">
 
 
-2. HiChIP data   
+### 2. HiChIP data   
 We provide test data of GM12878 cohesin HiChIP two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by scripts of deLoops, jd2washU (BEDTOOLS needed), jd2juice (Juicer needed), jd2fingerprint and jd2saturation. ***-hic*** option means using cutoffs design for Hi-C like data, see above. 
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz 
@@ -101,14 +101,14 @@ With the adjustment of resolution, color range and how to show the loops, then y
 ![](https://github.com/YaqiangCao/cLoops/blob/master/pngs/hichip_juicebox_example.png) 
 
 
-3. Hi-C data   
+### 3. Hi-C data   
 We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. Run the the command as following to call loops.
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz 
 cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -eps 2000,4000,6000,8000,10000 -minPts 30 -s 1 -hic 1
 ```   
 
-4. Fingerprint plot for data qualities comparasion of loops calling 
+### 4. Fingerprint plot for data qualities comparasion of loops calling 
 Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/compare_fingerprint.pdf), the far from the random line, the better for the data used to call loops by cLoops.
 ```
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
