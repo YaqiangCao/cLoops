@@ -2,13 +2,7 @@
 #--coding:utf-8 --
 """
 Stastical significance is tested for every chromosome using the local permutated background.
-2017-03-24: try except added for estimating reads in a region just in case.
-2017-06-07: fix small bug as all self-ligation clusters due to distance cutoff ; also change the PETs of a chromosome to the filtered numbers according to distance cutoff.
-2017-06-13: modified ES caculation in case the mean ES is zero, especially for larger window size shifting
-2017-06-15: modified combined p-values as geometric mean
-2017-06-20: modified the hypergeometric test rab to rab-1, all as following to avoid p-values too small; if no noise nearby, the ES is set to rab;combined-p-value is cancled; pending change N to N' share the same distance distribution,this will lead to too much burden on computation.
-2017-07-19: modified HiChIP significant cutoff, for all datasets, eps=5000,minPts=20 without twice option is a good parameter.
-2017-08-02: modified genomecoverage model, not using HTSeq now to save memories, also, much faster than previouse method
+2018-02-01: improved data structure for genomecoverage,much faster and less memory than previouse version for significance calling,slightly changed the loops boundary.
 """
 __date__ = "2017-03-15"
 __modified__ = ""
@@ -27,6 +21,25 @@ from cLoops.io import parseJd
 from cLoops.utils import cFlush
 
 
+def getCorLink(cs):
+    """
+    @param cs: [1,2,3,4], a list for the coordinates x or y
+    @rtype: dic, keys is the coordinate, value is the closest next coordinate and points index in this coordinate
+    """
+    ts = {}
+    for i,c in enumerate(cs):
+        if c not in ts:
+            ts[c] = []
+        ts[c].append(i)
+    keys = sorted(ts.keys())
+    for i in xrange(len(keys)-1):
+        ni = keys[i]
+        nj = keys[i+1]
+        ts[ni] = {"next":nj,"points":ts[ni]}
+    ts[nj] = {"next":None,"points":ts[nj]}
+    return ts
+     
+
 def getGenomeCoverage(f, cut=0):
     """
     Build the genomic model for random access. Could use a lot of memory.
@@ -37,35 +50,35 @@ def getGenomeCoverage(f, cut=0):
     j = mat.shape[0]
     if j == 0:
         return None, 0
-    m = max([np.max(mat[:, 1]), np.max(mat[:, 2])])
-    model = [False] * (m + 1000000)  #+10 just in case boundary escape
-    for t in mat:
-        if model[t[1]] == False:
-            model[t[1]] = []
-        if model[t[2]] == False:
-            model[t[2]] = []
-        model[t[1]].append(t[0])
-        model[t[2]].append(0 - t[0])
-    return model, j * 2
+    xs = getCorLink(mat[:,1])
+    ys = getCorLink(mat[:,2])
+    return [xs,ys],j*2
 
 
-def getCounts(iv, model):
-    """
-    Get reads ids for a region.
-    """
-    rs = []
-    for i in xrange(iv[0], iv[1]):
-        if model[i] != False:
-            rs.extend(model[i])
-    rs = list(np.abs(list(rs)))
-    return rs
+def getCounts(iv,ts):
+    ps = []
+    pos = None
+    for i in xrange(iv[0],iv[1]):
+        if i in ts:
+            pos = i
+            break
+    while pos <= iv[1] and pos!=None:
+        ps.extend(ts[pos]["points"])
+        pos = ts[pos]["next"]
+    return set(ps)
 
 
-def getPETsforRegions(iva, ivb, model):
-    ra = getCounts(iva, model)
-    rb = getCounts(ivb, model)
-    rab = set(ra).intersection(set(rb))
-    return len(ra), len(rb), len(rab)
+
+def getPETsforRegions(iva,ivb,model):
+    raSource = getCounts(iva,model[0]) 
+    raTarget = getCounts(iva,model[1])
+    rbSource = getCounts(ivb,model[0])
+    rbTarget = getCounts(ivb,model[1])
+    ra = len(raSource.union(raTarget))
+    rb = len(rbSource.union(rbTarget))
+    rab = len(raSource.intersection(rbTarget))
+    return ra,rb,rab
+
 
 
 def getNearbyPairRegions(iva, ivb, win=6):
@@ -105,28 +118,28 @@ def getMultiplePsFdr(iva, ivb, model, N, win=6):
     ivas, ivbs = getNearbyPairRegions(iva, ivb, win=win)
     hyps, rabs, nbps = [], [], []
     for na in ivas:
-        try:
-            nra = getCounts(na, model)
-        except:
-            continue
+        nraSource = getCounts(na,model[0]) 
+        nraTarget = getCounts(na,model[1])
+        nra = nraSource.union(nraTarget)
         nralen = float(len(nra))
-        if nralen == 0:
+        if nralen < 1:
             continue
         for nb in ivbs:
-            try:
-                nrb = getCounts(nb, model)
-            except:
+            nrbSource = getCounts(nb,model[0]) 
+            nrbTarget = getCounts(nb,model[1])
+            nrb = nrbSource.union(nrbTarget)
+            nrblen = len(nrb)
+            if nrblen < 1:
                 continue
-            if len(nrb) == 0:
-                continue
-            nrab = len(set(nra).intersection(set(nrb)))
+            nrab = float(len(nra.intersection(nrb)))
+            #nrab = float(len(nraSource.intersection(nrbTarget)))
             #collect the value for poisson test
             rabs.append(nrab)
             #collect the nearby hypergeometric test result
-            nhyp = hypergeom.sf(nrab - 1.0, N, nralen, len(nrb))
+            nhyp = hypergeom.sf(nrab - 1.0, N, nralen, nrblen)
             hyps.append(nhyp)
             #collect the possibility for following binomal test
-            den = nrab / (nralen * len(nrb))
+            den = nrab / (nralen * nrblen)
             nbps.append(den)
     if len(rabs) == 0:
         return ra, rb, rab, np.inf, 0.0, hyp, 0.0, 0.0, 0.0,
@@ -179,8 +192,10 @@ def getIntSig(f, records, minPts, discut):
     for r in records:
         chrom = r[0]
         key = "%s-%s-%s" % (r[0], r[3], i)
-        iva = [r[1] - 1, r[2] + 1]
-        ivb = [r[4] - 1, r[5] + 1]
+        #iva = [r[1] - 1, r[2] + 1]
+        #ivb = [r[4] - 1, r[5] + 1]
+        iva = [r[1], r[2]]
+        ivb = [r[4], r[5]]
         #filter loops
         distance = abs(sum(ivb) / 2.0 - sum(iva) / 2.0)
         if distance < discut:
