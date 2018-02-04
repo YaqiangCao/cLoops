@@ -192,10 +192,8 @@ def getIntSig(f, records, minPts, discut):
     for r in records:
         chrom = r[0]
         key = "%s-%s-%s" % (r[0], r[3], i)
-        #iva = [r[1] - 1, r[2] + 1]
-        #ivb = [r[4] - 1, r[5] + 1]
-        iva = [r[1], r[2]]
-        ivb = [r[4], r[5]]
+        iva = [max(0,r[1]), r[2]]
+        ivb = [max(0,r[4]), r[5]]
         #filter loops
         distance = abs(sum(ivb) / 2.0 - sum(iva) / 2.0)
         if distance < discut:
