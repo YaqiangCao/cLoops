@@ -1,11 +1,11 @@
 # cLoops: a clustering based loops calling method for ChIA-PET, HiChIP and Hi-C
-![](http://github.com/YaqiangCao/cLoops/blob/master/cLoops.png)
+![](https://github.com/YaqiangCao/cLoops/raw/master/cLoops.png)
 
 ## Introduction
 Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm called cDBSCAN. The significances of the inter-ligation clusters are then estimated using permutated local background. Both steps are data type independent, and thus enable cLoops to be applicable to even new genome-wide interaction mapping to be developed in the future.
 
 Basic workflow of cLoops is as following:
-![](http://github.com/YaqiangCao/cLoops/blob/master/workflow.png)
+![](https://github.com/YaqiangCao/cLoops/raw/master/workflow.png)
 
 If you find cLoops is useful, please cite our paper:    
 ### cLoops: a clustering based loops calling method for ChIA-PET, HiChIP and Hi-C ###
@@ -73,7 +73,7 @@ wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM1287
 cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -j 1
 ```      
 For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following, the two kinds of PETs well seperated:
-![](https://github.com/YaqiangCao/cLoops/blob/master/pngs/chiapet_disCutoff.png)
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/chiapet_disCutoff.png)
 
 If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
 
@@ -83,7 +83,7 @@ jd2washU -d chiapet -o chiapet
 ``` 
 
 With other ChIP-seq data, you can get following plot:
-![](http://github.com/YaqiangCao/cLoops/blob/master/pngs/chiapet_washU.png)
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/chiapet_washU.png)
 
 ### 2. HiChIP data   
 We provide test data of GM12878 cohesin HiChIP two biological replicates, just the chromosome 21 mapped to hg38. Run the command as following to call merged loops. ***-s*** option is used to keep working directory and temp files, which could be used by scripts of deLoops, jd2washU (BEDTOOLS needed), jd2juice (Juicer needed), jd2fingerprint and jd2saturation. ***-hic*** option means using cutoffs design for Hi-C like data, see above. 
@@ -97,7 +97,7 @@ Then use jd2juice to convert cLoops temp files to hic file for juicebox:
 jd2juice -d hichip -o hichip -org hg38 
 ``` 
 With the adjustment of resolution, color range and how to show the loops, then you can get following visualization:
-![](http://github.com/YaqiangCao/cLoops/blob/master/pngs/hichip_juicebox_example.png) 
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/hichip_juicebox_example.png) 
 
 
 ### 3. Hi-C data   
