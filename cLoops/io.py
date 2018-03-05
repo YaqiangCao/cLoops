@@ -3,6 +3,7 @@
 """
 2017-07-20: loops2juicebox added
 2017-08-02: re-design the datastructure
+2018-03-05: modified loops2juice
 """
 
 __author__ = "CAO Yaqiang"
@@ -212,12 +213,15 @@ def loops2juice(fin, fout, logger, significant=1):
                 continue
             iva = parseIv(line[7])
             ivb = parseIv(line[8])
-            nline = [
-                iva[0], iva[1], iva[2], ivb[0], ivb[1], ivb[2], '"0,255,255"',
-                line[11], line[0], line[2], line[1], line[4],
-                -np.log10(float(line[3])), -np.log10(float(line[9])),
-                -np.log10(float(line[6]))
-            ]
+            try:
+                nline = [
+                    iva[0], iva[1], iva[2], ivb[0], ivb[1], ivb[2], '"0,255,255"',
+                    line[11], line[0], line[2], line[1], line[4],
+                    -np.log10(float(line[3])), -np.log10(float(line[9])),
+                    -np.log10(float(line[6]))
+                ]
+            except:
+                continue
             f.write("\t".join(map(str, nline)) + "\n")
     logger.info(
         "Converting %s to Juicebox 2D annotation feature finished." % fin)
