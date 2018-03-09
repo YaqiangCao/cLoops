@@ -1,6 +1,7 @@
 setup.py
 cLoops/__init__.py
 cLoops/cDBSCAN.py
+cLoops/cDBSCAN2.py
 cLoops/cModel.py
 cLoops/cPlots.py
 cLoops/ests.py
