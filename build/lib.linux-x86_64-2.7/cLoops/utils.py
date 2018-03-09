@@ -97,10 +97,10 @@ def mainHelp():
     parser.add_argument(
         "-minPts",
         dest="minPts",
-        default=3,
+        default=5,
         type=int,
         help=
-        "Points required in a cluster, minPts in cDBSCAN, key parameter, default is 3. 3 is good for TFs and histone modification ChIA-PET data. For data like HiChIP, set it larger, like 10, 25, 50."
+        "Points required in a cluster, minPts in cDBSCAN, key parameter, default is 5. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like 10, 25, 50."
     )
     parser.add_argument(
         "-p",

@@ -257,7 +257,7 @@ def markIntSig(ds, escut=2.0, fdrcut=0.05, hpfdrcut=0.05, bpcut=1e-3,ppcut=1e-5,
     #smaller hypergeometric result
     d = ds.loc[c.index, "hypergeometric_p-value"]
     d = d[d <= hypcut]
-    #smaller  poisson or binomal,poisson maybe better
+    #smaller poisson and binomal
     e = ds.loc[d.index, "poisson_p-value"]
     e = e[e <= ppcut]
     f = ds.loc[e.index, "binomal_p-value"]

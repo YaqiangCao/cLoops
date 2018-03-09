@@ -239,35 +239,8 @@ def getIntSig(f, records, minPts, discut):
     return ds
 
 
-def markIntSigbk(ds, escut=1.0, fdrcut=0.05, hpfdrcut=0.05, gpcut=1e-5):
-    """
-    gpcut is general p-value cutoff for binomal test, poisson test and hypergeometric test.
-    """
-    #filter data according to cutoffs
-    #larger enrichment score
-    a = ds["ES"]
-    a = a[a >= escut]
-    #smaller FDR
-    b = ds.loc[a.index, "FDR"]
-    b = b[b <= fdrcut]
-    #smaller local hypergeometric test FDR
-    c = ds.loc[b.index, "hypergeometric_local_FDR"]
-    c = c[c <= hpfdrcut]
-    #smaller hypergeometric result
-    d = ds.loc[c.index, "hypergeometric_p-value"]
-    d = d[d <= gpcut]
-    #smaller  poisson or binomal,poisson maybe better
-    e = ds.loc[d.index, "poisson_p-value"]
-    f = ds.loc[d.index, "binomal_p-value"]
-    e = e[e <= gpcut]
-    f = f[f <= gpcut]
-    rs = e.index.union(f.index)
-    ns = pd.Series(data=np.zeros(ds.shape[0]), index=ds.index)
-    ns[rs] = 1.0
-    ds["significant"] = ns
-    return ds
 
-def markIntSig(ds, escut=2.0, fdrcut=0.05, hpfdrcut=0.05, bpcut=1e-2,ppcut=1e-5,hypcut=1e-10):
+def markIntSig(ds, escut=2.0, fdrcut=0.05, hpfdrcut=0.05, bpcut=1e-3,ppcut=1e-5,hypcut=1e-10):
     """
     gpcut is general p-value cutoff for binomal test, poisson test and hypergeometric test.
     """
