@@ -12,6 +12,7 @@ pipe.py
 2017-08-07: modified pipeline, as accecpt multiple eps.
 2017-08-10: to do, re-design data structure as using HDF5 as botoom structure to reduce memory usage
 2017-08-18: changed combine method for loops when runing a series of eps.
+2018-03-13: modified combining method for multiple eps
 """
 
 __author__ = "CAO Yaqiang"
@@ -36,7 +37,7 @@ from cLoops.io import parseRawBedpe, txt2jd, parseJd, loops2washU, loops2juice
 from cLoops.cDBSCAN import cDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
-from cLoops.cModel import getIntSig, markIntSig, markIntSigHic
+from cModel import getIntSig, markIntSig, markIntSigHic
 
 #global settings
 global logger
@@ -114,60 +115,18 @@ def runDBSCAN(fs, eps, minPts, cut=0, cpu=1):
     return dataI, dataS, dis, dss
 
 
-def filterClusterByDis(data, cut):
+def checkSameLoop(ra, rb):
     """
-    Filter inter-ligation clusters by distances
+    check if two anchors are exact same
     """
-    for key in data:
-        nr = []
-        for r in data[key]["records"]:
-            d = (r[4] + r[5]) / 2 - (r[1] + r[2]) / 2
-            if d >= cut:
-                nr.append(r)
-        data[key]["records"] = nr
-    return data
-
-
-def checkOneEndOverlap(xa, xb, ya, yb):
-    """
-    check the overlap of a region for the same chromosome
-    """
-    if ya <= xa <= yb or ya <= xb <= yb:
-        return True
-    if xa <= ya <= xb or xa <= yb <= xb:
+    if ra[1] == rb[1] and ra[2] == rb[2] and ra[4] == rb[4] and ra[5] == rb[5]:
         return True
     return False
-
-
-def checkOverlap(ra, rb):
-    """
-    check the overlap of two anchors,ra=[chr,left_start,left_end,right_start,right_end]
-    """
-    if checkOneEndOverlap(ra[1], ra[2], rb[1], rb[2]) and checkOneEndOverlap(
-            ra[4], ra[5], rb[4], rb[5]):
-        return True
-    return False
-
-
-def mergeOverlap(ra, rb):
-    """
-    merge the overlaped two anchors,ra=[chr,left_start,left_end,right_start,right_end]
-    """
-    nr = [
-        ra[0],
-        max([ra[1], rb[1]]),
-        min([ra[2], rb[2]]), ra[3],
-        max([ra[4], rb[4]]),
-        min([ra[5], rb[5]])
-    ]
-    if nr[2] <= nr[1] or nr[5] <= nr[4]:
-        return None
-    return nr
 
 
 def combineTwice(dataI, dataI_2):
     """
-    For the runsecond model, combine first round and second round clustering result, like pgltools merge
+    Combining multiple clustering result.
     """
     for key in dataI_2.keys():
         if key not in dataI:
@@ -176,27 +135,14 @@ def combineTwice(dataI, dataI_2):
                 "records": dataI_2[key]["records"]
             }
         else:
-            #non-redundant records
-            nrs = copy.deepcopy(dataI[key]["records"])
-            newrs = []
             for ra in dataI_2[key]["records"]:
-                flag = 0
-                for i, rb in enumerate(nrs):
-                    if checkOverlap(ra, rb):
-                        flag = 1
+                flag = 1
+                for rb in dataI[key]["records"]:
+                    if checkSameLoop(ra, rb):
+                        flag = 0
                         break
-                if flag == 1:
-                    """
-                    nr = mergeOverlap(ra, rb)
-                    if nr == None:
-                        continue
-                    nrs.append(nr)
-                    del nrs[i]
-                    """
-                    continue
-                else:
-                    nrs.append(ra)
-            dataI[key]["records"] = nrs
+                if flag:
+                    dataI[key]["records"].append(ra)
     return dataI
 
 
@@ -204,7 +150,9 @@ def runStat(dataI, minPts, cut, cpu, fout, hichip=0):
     """
     Calling p-values of interactions for all chromosomes.
     """
-    logger.info("Starting estimate significance for interactions")
+    logger.info(
+        "Starting estimate significance for interactions using distance cutoff as %s"
+        % cut)
     ds = Parallel(n_jobs=cpu)(delayed(getIntSig)(
         dataI[key]["f"], dataI[key]["records"], minPts, cut)
                               for key in dataI.keys())
@@ -264,7 +212,6 @@ def pipe(fs,
         logger.info(
             "Estimated inter-ligation and self-ligation distance cutoff as %s"
             % cut)
-        dataI = filterClusterByDis(dataI, cut)
     else:
         #3.1. run DBSCAN for multiple times
         dataI = {}
@@ -288,10 +235,11 @@ def pipe(fs,
                 "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s."
                 % (cut_2, ep))
             cuts.append(cut_2)
-            dataI_2 = filterClusterByDis(dataI_2, cut_2)
             #combine the first round and second round result
             dataI = combineTwice(dataI, dataI_2)
-        cut = min(cuts)
+        #cut = min(cuts)
+        cut = np.max(cuts)
+        #cut = np.median(cuts)
     #5.estimate the significance
     e = runStat(dataI, minPts, cut, cpu, fout, hic)
     if e:
@@ -313,21 +261,43 @@ def main():
     fn = os.path.join(os.getcwd(), "cLoops.log")
     logger = getLogger(fn)
     op = mainHelp()
-    report = "Command line: cLoops -f {} -o {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {}".format(
-        op.fnIn, op.fnOut, op.eps, op.minPts, op.cpu, op.washU, op.juice,
-        op.tmp, op.chroms, op.hic, op.cut)
+    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {}".format(
+        op.fnIn, op.fnOut, op.mode, op.eps, op.minPts, op.cpu, op.washU,
+        op.juice, op.tmp, op.chroms, op.hic, op.cut)
     logger.info(report)
-    if "," in str(op.eps):
-        eps = map(int, op.eps.split(","))
-    else:
-        eps = int(op.eps)
-        if eps != 0:
-            eps = [eps]
+    if op.mode == 0:
+        if "," in str(op.eps):
+            eps = map(int, op.eps.split(","))
+        else:
+            eps = int(op.eps)
+            if eps != 0:
+                eps = [eps]
+        if op.minPts == 0:
+            logger.error("minPts not assigned!")
+            return
+        else:
+            minPts = op.minPts
+        hic = op.hic
+    if op.mode == 1:
+        eps = [500, 1000, 2000]
+        minPts = 5
+        hic = 0
+    if op.mode == 2:
+        eps = [1000, 2000, 5000]
+        minPts = 5
+        hic = 0
+    if op.mode == 3:
+        eps = [1000, 2000, 4000, 6000, 8000, 10000]
+        minPts = 20
+        hic = 1
+    report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
+                                                          hic)
+    logger.info(report)
     pipe(
-        op.fnIn.split(","), op.fnOut, eps, op.minPts, op.chroms, op.cpu,
-        op.tmp, op.hic, op.washU, op.juice, op.cut)
+        op.fnIn.split(","), op.fnOut, eps, minPts, op.chroms, op.cpu, op.tmp,
+        hic, op.washU, op.juice, op.cut)
     usedtime = datetime.now() - start
-    r = "cLoops finished. Used CPU time: %s Bye!" % usedtime
+    r = "cLoops finished. Used CPU time: %s Bye!\n\n\n" % usedtime
     logger.info(r)
 
 

@@ -58,9 +58,9 @@ class cDBSCAN:
         @param mat: the raw or normalized [pointId,X,Y] data matrix
         """
         Grid = {}
-        Gorder = {'x':{}, 'y':{}}
+        Gorder = {'x': {}, 'y': {}}
         Gtype = {}
-        self.axisindex = {'x':0, 'y':1}
+        self.axisindex = {'x': 0, 'y': 1}
         for d in mat:
             #modification
             #rotate coordinate system by 45 degree
@@ -69,7 +69,7 @@ class cDBSCAN:
             nx = int(x / self.cw) + 1
             ny = int(y / self.cw) + 1
             Grid.setdefault((nx, ny), [])
-            #gird types {0: sparse cell, 1: crowded cell, 
+            #gird types {0: sparse cell, 1: crowded cell,
             #2: core cell (crowded cell assigned to a cluster)
             #-1: noise cell or edge cell}
             Grid[(nx, ny)].append([x, y, d[0], -1])
@@ -92,14 +92,17 @@ class cDBSCAN:
         #get pt orders
         noisecell = []
         for index in Grid:
-            noiseflag = all([Gtype[near_index] == -1 for near_index in self.getNearbyCells(index)])
+            noiseflag = all([
+                Gtype[near_index] == -1
+                for near_index in self.getNearbyCells(index)
+            ])
             if Gtype[index] == -1 and noiseflag:
                 #check noise cell
                 #noise cell should not waste time sorting
                 noisecell.append(index)
                 continue
-            Gorder['x'][index].sort(key = lambda x: x[0])
-            Gorder['y'][index] = sorted(Grid[index], key = lambda x: x[1])
+            Gorder['x'][index].sort(key=lambda x: x[0])
+            Gorder['y'][index] = sorted(Grid[index], key=lambda x: x[1])
         #remove noise cell
         for index in noisecell:
             del Grid[index]
@@ -107,7 +110,6 @@ class cDBSCAN:
         self.Grid = Grid
         self.Gtype = Gtype
         self.Gorder = Gorder
-
 
     def queryGrid(self):
         clusterId = 0
@@ -148,10 +150,12 @@ class cDBSCAN:
                     for p in ncell:
                         p[-1] = clusterId
                     clusters[clusterId].extend(ncell)
-                    self.updatePtDict(border_pts, self.getCrowdedCellNeighbor(nindex))
+                    self.updatePtDict(border_pts,
+                                      self.getCrowdedCellNeighbor(nindex))
                 elif self.Gtype[nindex] == 0:
                     #sparse cell process
-                    adjacent_pts, flag = self.getSparseCellNeighbor(border_pts[nindex], nindex)
+                    adjacent_pts, flag = self.getSparseCellNeighbor(
+                        border_pts[nindex], nindex)
                     if flag:
                         #at leaset one pt in cell meet requirement
                         for p in ncell:
@@ -187,7 +191,6 @@ class cDBSCAN:
                 self.labels[p[-2]] = cid
         #f.close()
 
-
     def getCrowdedCellNeighbor(self, index):
         adj_pts = {}
         for axis in ['x', 'y']:
@@ -203,10 +206,13 @@ class cDBSCAN:
                     edgept = self.Gorder[axis][index][0]
                 else:
                     edgept = self.Gorder[axis][index][-1]
-                newresult = [x for x in self.binSearchAdjPt(newindex, edgept, axis, delta)
-                                        if x[-1] == -1]
+                newresult = [
+                    x
+                    for x in self.binSearchAdjPt(newindex, edgept, axis, delta)
+                    if x[-1] == -1
+                ]
                 if newresult: adj_pts[newindex] = newresult
-        
+
         edge_pts = self.findEdgePts(index)
         for delta in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
             newindex = (index[0] + delta[0], index[1] + delta[1])
@@ -226,8 +232,10 @@ class cDBSCAN:
                     #for x in newresult:
                     #    if x[-2] not in pre_ids and x[-1] == -1:
                     #        adj_pts[newindex].append(x)
-                    adj_pts[newindex].extend([x for x in newresult
-                        if x[-2] not in pre_ids and x[-1] == -1])
+                    adj_pts[newindex].extend([
+                        x for x in newresult
+                        if x[-2] not in pre_ids and x[-1] == -1
+                    ])
                 else:
                     newresult = [x for x in newresult if x[-1] == -1]
                     if newresult: adj_pts[newindex] = newresult
@@ -235,7 +243,7 @@ class cDBSCAN:
 
     def findEdgePts(self, index):
         #find edge pts in crowded cell
-        order = {'x':self.Gorder['x'][index], 'y':self.Gorder['y'][index]}
+        order = {'x': self.Gorder['x'][index], 'y': self.Gorder['y'][index]}
         upleft = [order['x'][0]]
         downleft = [order['x'][0]]
         upflag = True
@@ -286,7 +294,12 @@ class cDBSCAN:
                     downflag = False
             if not (upflag or downflag):
                 break
-        return {(-1, -1):downleft, (-1, 1):upleft, (1, -1):downright, (1, 1):upright}
+        return {
+            (-1, -1): downleft,
+            (-1, 1): upleft,
+            (1, -1): downright,
+            (1, 1): upright
+        }
 
     def getSparseCellNeighbor(self, seedpts, index):
         cell_pt_num = len(self.Grid[index])
@@ -299,16 +312,19 @@ class cDBSCAN:
         while pts:
             p = pts.pop()
             p_adjacent = {}
-            for delta in [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]:
+            for delta in [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1),
+                          (1, 0), (1, 1)]:
                 newindex = (index[0] + delta[0], index[1] + delta[1])
                 if newindex not in self.Grid:
                     continue
                 if delta[1] == 0:
                     #only need to compare x axis
-                    p_adjacent[newindex] = self.binSearchAdjPt(newindex, p, 'x', delta[0])
+                    p_adjacent[newindex] = self.binSearchAdjPt(
+                        newindex, p, 'x', delta[0])
                 elif delta[0] == 0:
                     #only need to compare y axis
-                    p_adjacent[newindex] = self.binSearchAdjPt(newindex, p, 'y', delta[1])
+                    p_adjacent[newindex] = self.binSearchAdjPt(
+                        newindex, p, 'y', delta[1])
                 else:
                     #find overlap
                     p_adjacent[newindex] = self.overlapPtList(
@@ -322,8 +338,10 @@ class cDBSCAN:
                     #if any pt meet the requirement, other unassigned pts not
                     #already in seedpts should be added to check list
                     seedPtIds = set([x[-2] for x in seedpts])
-                    pts.extend([x for x in self.Grid[index]
-                        if x[-1] == -1 and x[-2] not in seedPtIds])
+                    pts.extend([
+                        x for x in self.Grid[index]
+                        if x[-1] == -1 and x[-2] not in seedPtIds
+                    ])
                     flag = True
         return totalresult, flag
 
@@ -338,8 +356,8 @@ class cDBSCAN:
                     #for p in pts:
                     #    if p[-2] not in pre_ids:
                     #        dictA[index].append(p)
-                    dictA[index].extend([x for x in pts
-                        if x[-2] not in pre_ids])
+                    dictA[index].extend(
+                        [x for x in pts if x[-2] not in pre_ids])
                 else:
                     dictA[index] = pts
 
@@ -363,5 +381,3 @@ class cDBSCAN:
         ptdictA = {x[-2]: x for x in ptlistA}
         newkeys = set(ptdictA.keys()) & set([x[-2] for x in ptlistB])
         return [ptdictA[id] for id in newkeys]
-
-

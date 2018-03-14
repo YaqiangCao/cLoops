@@ -2,13 +2,14 @@
 #--coding:utf-8 --
 """
 2018-03-08: modified default minPts to 3
+2018-03-13: mode added for pre-set parameters
 """
 
 __author__ = "CAO Yaqiang"
 __date__ = ""
 __modified__ = ""
 __email__ = "caoyaqiang0410@gmail.com"
-__version__ = "0.7"
+__version__ = "0.8"
 
 #sys library
 import os, time, sys, logging, gzip, argparse
@@ -88,19 +89,30 @@ def mainHelp():
     parser.add_argument(
         "-o", dest="fnOut", required=True, type=str, help="Output prefix.")
     parser.add_argument(
+        "-m",
+        dest="mode",
+        required=False,
+        type=int,
+        default=0,
+        choices=[0, 1, 2, 3],
+        help=
+        "Pre-set parameters and signicicance cutoff for different types of data. Default is 0, using values from -eps and -minPts. Set 1 for sharp peak like ChIA-PET data (CTCF,RAD21,eg..),set 2 for broad peak like ChIA-PET data (H3K27ac,H3K4me1 eg..), and set 3 for Hi-C or HiChIP."
+    )
+    parser.add_argument(
         "-eps",
         dest="eps",
         default=0,
+        required=False,
         help=
-        "Distance that define two points being neighbors, eps in cDBSCAN as key parameter, default is auto estimation from the data as 2 fold of fragment size. Set 0 as auto, good for TFs ChIA-PET data. For broad peak like ChIA-PET data, such as H3K27ac/H3K4me1, set it to 2000. For data like HiChIP, set it larger,set several eps like 2000,5000,10000."
+        "Distance that define two points being neighbors, eps in cDBSCAN as key parameter. For sharp peak like ChIA-PET data (CTCF), it can be set as 1000,2000. For broad peak like ChIA-PET data, such as H3K27ac/H3K4me1, set it to 2000,5000. For data like HiChIP and Hi-C, set it larger,set several eps like 2000,5000,10000. Default is 0, cLoops can auto estimate a eps for initial result, maybe not good."
     )
     parser.add_argument(
         "-minPts",
         dest="minPts",
-        default=5,
+        default=0,
         type=int,
         help=
-        "Points required in a cluster, minPts in cDBSCAN, key parameter, default is 5. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like 10, 25, 50."
+        "Points required in a cluster, minPts in cDBSCAN, key parameter. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like 10, 25, 50."
     )
     parser.add_argument(
         "-p",
@@ -162,16 +174,13 @@ def mainHelp():
         required=False,
         default=0,
         type=int,
-        help=
-        "Initial distance cutoff to filter PETs, default is 0. Keep this as default when using auto mode to estimate eps."
-    )
+        help="Initial distance cutoff to filter PETs, default is 0.")
     parser.add_argument(
         "-v",
         dest="version",
         action="version",
-        version="cLoops v%s"%__version__,
-    )
- 
+        version="cLoops v%s" % __version__, )
+
     op = parser.parse_args()
     return op
 

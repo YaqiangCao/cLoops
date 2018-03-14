@@ -18,7 +18,7 @@ import pandas as pd
 from scipy.stats import hypergeom, binom, poisson, combine_pvalues
 
 #cLoops
-from cLoops.io import parseJd
+from cLoops.io import parseJd, parseIv
 from cLoops.utils import cFlush
 
 
@@ -28,18 +28,18 @@ def getCorLink(cs):
     @rtype: dic, keys is the coordinate, value is the closest next coordinate and points index in this coordinate
     """
     ts = {}
-    for i,c in enumerate(cs):
+    for i, c in enumerate(cs):
         if c not in ts:
             ts[c] = []
         ts[c].append(i)
     keys = sorted(ts.keys())
-    for i in xrange(len(keys)-1):
+    for i in xrange(len(keys) - 1):
         ni = keys[i]
-        nj = keys[i+1]
-        ts[ni] = {"next":nj,"points":ts[ni]}
-    ts[nj] = {"next":None,"points":ts[nj]}
+        nj = keys[i + 1]
+        ts[ni] = {"next": nj, "points": ts[ni]}
+    ts[nj] = {"next": None, "points": ts[nj]}
     return ts
-     
+
 
 def getGenomeCoverage(f, cut=0):
     """
@@ -51,35 +51,33 @@ def getGenomeCoverage(f, cut=0):
     j = mat.shape[0]
     if j < 2:
         return None, 0
-    xs = getCorLink(mat[:,1])
-    ys = getCorLink(mat[:,2])
-    return [xs,ys],j*2
+    xs = getCorLink(mat[:, 1])
+    ys = getCorLink(mat[:, 2])
+    return [xs, ys], j * 2
 
 
-def getCounts(iv,ts):
+def getCounts(iv, ts):
     ps = []
     pos = None
-    for i in xrange(iv[0],iv[1]):
+    for i in xrange(iv[0], iv[1]):
         if i in ts:
             pos = i
             break
-    while pos <= iv[1] and pos!=None:
+    while pos <= iv[1] and pos != None:
         ps.extend(ts[pos]["points"])
         pos = ts[pos]["next"]
     return set(ps)
 
 
-
-def getPETsforRegions(iva,ivb,model):
-    raSource = getCounts(iva,model[0]) 
-    raTarget = getCounts(iva,model[1])
-    rbSource = getCounts(ivb,model[0])
-    rbTarget = getCounts(ivb,model[1])
+def getPETsforRegions(iva, ivb, model):
+    raSource = getCounts(iva, model[0])
+    raTarget = getCounts(iva, model[1])
+    rbSource = getCounts(ivb, model[0])
+    rbTarget = getCounts(ivb, model[1])
     ra = len(raSource.union(raTarget))
     rb = len(rbSource.union(rbTarget))
     rab = len(raSource.intersection(rbTarget))
-    return ra,rb,rab
-
+    return ra, rb, rab
 
 
 def getNearbyPairRegions(iva, ivb, win=6):
@@ -119,29 +117,29 @@ def getMultiplePsFdr(iva, ivb, model, N, win=6):
     ivas, ivbs = getNearbyPairRegions(iva, ivb, win=win)
     hyps, rabs, nbps = [], [], []
     for na in ivas:
-        nraSource = getCounts(na,model[0]) 
-        nraTarget = getCounts(na,model[1])
+        nraSource = getCounts(na, model[0])
+        nraTarget = getCounts(na, model[1])
         nra = nraSource.union(nraTarget)
         nralen = float(len(nra))
-        if nralen < 1:
-            continue
         for nb in ivbs:
-            nrbSource = getCounts(nb,model[0]) 
-            nrbTarget = getCounts(nb,model[1])
+            nrbSource = getCounts(nb, model[0])
+            nrbTarget = getCounts(nb, model[1])
             nrb = nrbSource.union(nrbTarget)
             nrblen = len(nrb)
-            if nrblen < 1:
-                continue
             nrab = float(len(nra.intersection(nrb)))
-            #nrab = float(len(nraSource.intersection(nrbTarget)))
-            #collect the value for poisson test
-            rabs.append(nrab)
-            #collect the nearby hypergeometric test result
-            nhyp = hypergeom.sf(nrab - 1.0, N, nralen, nrblen)
-            hyps.append(nhyp)
-            #collect the possibility for following binomal test
-            den = nrab / (nralen * nrblen)
-            nbps.append(den)
+            if nrab > 0:
+                #collect the value for poisson test
+                rabs.append(nrab)
+                #collect the nearby hypergeometric test result
+                nhyp = hypergeom.sf(nrab - 1.0, N, nralen, nrblen)
+                hyps.append(nhyp)
+                #collect the possibility for following binomal test
+                den = nrab / (nralen * nrblen)
+                nbps.append(den)
+            else:
+                rabs.append(0.0)
+                hyps.append(1.0)
+                nbps.append(0.0)
     if len(rabs) == 0:
         return ra, rb, rab, np.inf, 0.0, hyp, 0.0, 0.0, 0.0,
     hyps, rabs = np.array(hyps), np.array(rabs)
@@ -177,11 +175,82 @@ def getBonPvalues(ps):
     return ps
 
 
+def checkOneEndOverlap(xa, xb, ya, yb):
+    """
+    check the overlap of a region for the same chromosome
+    """
+    if ya <= xa <= yb or ya <= xb <= yb:
+        return True
+    if xa <= ya <= xb or xa <= yb <= xb:
+        return True
+    return False
+
+
+def checkOverlap(ra, rb):
+    """
+    check the overlap of two anchors,ra=[chr,left_start,left_end,right_start,right_end]
+    """
+    if checkOneEndOverlap(ra[1], ra[2], rb[1], rb[2]) and checkOneEndOverlap(
+            ra[4], ra[5], rb[4], rb[5]):
+        return True
+    return False
+
+
+def removeDup(ds):
+    """
+    Remove overlapped called loops, keep the more significant one for multiple eps result. 
+    @param:ds, from getIntSig
+    """
+    uniqueds = {}
+    reds = {}
+    rekeys = set()
+    keys = ds.keys()
+    for i in xrange(len(keys)):
+        keyi = keys[i]
+        if keyi in rekeys:
+            continue
+        ivai = parseIv(ds[keyi]["iva"])
+        ivbi = parseIv(ds[keyi]["ivb"])
+        #1 means unique loops
+        flag = 1
+        #collect overlapped loops
+        for j in xrange(i + 1, len(keys)):
+            keyj = keys[j]
+            if keyj in rekeys:
+                continue
+            ivaj = parseIv(ds[keyj]["iva"])
+            ivbj = parseIv(ds[keyj]["ivb"])
+            flagj = checkOverlap([
+                ivai[0], ivai[1], ivai[2], ivbi[0], ivbi[1], ivbi[2]
+            ], [ivaj[0], ivaj[1], ivaj[2], ivbj[0], ivbj[1], ivbj[2]])
+            #there is overlapped loops,collect them
+            if flagj:
+                if keyi not in reds:
+                    reds[keyi] = [keyi]
+                    rekeys.add(keyi)
+                reds[keyi].append(keyj)
+                rekeys.add(keyj)
+                flag = 0
+        #collect unique loops
+        if flag:
+            uniqueds[keyi] = ds[keyi]
+    #for overlapped loops, choose the more significant ones
+    for key in reds.keys():
+        ts = {}
+        for t in reds[key]:
+            ts[t] = ds[t]["binomal_p-value"]
+        ts = pd.Series(ts)
+        ts.sort_values(inplace=True, ascending=True)
+        uniqueds[ts.index[0]] = ds[ts.index[0]]
+    return uniqueds
+
+
 def getIntSig(f, records, minPts, discut):
     """
     @param:discut, distance cutoff determined for self-ligation pets.
     """
-    print "Starting estimate significance for interactions in %s" % f
+    print "Starting estimate significance for %s candidate interactions in %s" % (
+        len(records), f)
     model, N = getGenomeCoverage(f, discut)
     print "Genomic coverage model built from %s" % f
     if N == 0:
@@ -193,8 +262,8 @@ def getIntSig(f, records, minPts, discut):
     for r in records:
         chrom = r[0]
         key = "%s-%s-%s" % (r[0], r[3], i)
-        iva = [max(0,r[1]), r[2]]
-        ivb = [max(0,r[4]), r[5]]
+        iva = [max(0, r[1]), r[2]]
+        ivb = [max(0, r[4]), r[5]]
         #filter loops
         distance = abs(sum(ivb) / 2.0 - sum(iva) / 2.0)
         if distance < discut:
@@ -231,6 +300,7 @@ def getIntSig(f, records, minPts, discut):
     print
     if len(ds.keys()) == 0:
         return None
+    ds = removeDup(ds)
     ds = pd.DataFrame(ds).T
     ds["poisson_p-value_corrected"] = getBonPvalues(ds["poisson_p-value"])
     ds["binomal_p-value_corrected"] = getBonPvalues(ds["binomal_p-value"])
@@ -239,8 +309,13 @@ def getIntSig(f, records, minPts, discut):
     return ds
 
 
-
-def markIntSig(ds, escut=2.0, fdrcut=0.05, hpfdrcut=0.05, bpcut=1e-3,ppcut=1e-5,hypcut=1e-10):
+def markIntSig(ds,
+               escut=2.0,
+               fdrcut=0.05,
+               hpfdrcut=0.05,
+               bpcut=1e-3,
+               ppcut=1e-5,
+               hypcut=1e-10):
     """
     gpcut is general p-value cutoff for binomal test, poisson test and hypergeometric test.
     """
@@ -257,7 +332,7 @@ def markIntSig(ds, escut=2.0, fdrcut=0.05, hpfdrcut=0.05, bpcut=1e-3,ppcut=1e-5,
     #smaller hypergeometric result
     d = ds.loc[c.index, "hypergeometric_p-value"]
     d = d[d <= hypcut]
-    #smaller  poisson or binomal,poisson maybe better
+    #smaller poisson and binomal
     e = ds.loc[d.index, "poisson_p-value"]
     e = e[e <= ppcut]
     f = ds.loc[e.index, "binomal_p-value"]
