@@ -91,8 +91,7 @@ def getNearbyPairRegions(iva, ivb, win=5):
     cb = sum(ivb) / 2
     sa = (iva[1] - iva[0]) / 2
     sb = (ivb[1] - ivb[0]) / 2
-    #step = min([sa, sb])
-    step = max([sa, sb])
+    step = (sa + sb)/2
     for i in xrange(0 - win, win + 1):
         if i == 0:
             continue
