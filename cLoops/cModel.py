@@ -4,7 +4,7 @@
 Stastical significance is tested for every chromosome using the local permutated background.
 2018-02-01: improved data structure for genomecoverage,much faster and less memory than previouse version for significance calling,slightly changed the loops boundary.
 2018-03-08: modified ChIA-PET significant loops cutoff
-2018-03-16: key change, sliding step changed to the half of the bigger anchor size always get more significant loops
+2018-03-16: key change, sliding step changed to the half of the mean anchor size always get more significant loops
 """
 __date__ = "2017-03-15"
 __modified__ = ""

@@ -49,18 +49,17 @@ column | name | explaination
 2th | FDR | false discovery rate for the loop, caculated as the number of permutated regions that there are more observed PETs than the region  
 3th | binomal\_p-value | binomal test p-value for the loop
 4th | distance | distance (bp) between the centers of the anchors for the loop
-5th | hypergeometric\_local\_FDR | FDR for the hypergeometric test p-value compared to permutated regions
-6th | hypergeometric\_p-value | hypergeometric test p-value for the loop
-7th | iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
-8th | ivb | genomic coordinates for the right anchor
-9th | poisson_p-value | poisson test p-value for the loop
-10th | ra | observed PETs number for the left anchor
-11th | rab | observed PETs number linking the left and right anchors
-12th | rb | observed PETs number for the right anchor
-13th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
-14th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
-15th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
-16th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, both binomal\_p-value and poisson\_p-value <=1e-5. You can ignore this and customize your cutoffs by visualization in the [Juicebox](https://github.com/theaidenlab/juicebox) or [washU](http://epigenomegateway.wustl.edu/) to determine your cutoffs.
+5th | hypergeometric\_p-value | hypergeometric test p-value for the loop
+6th | iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
+7th | ivb | genomic coordinates for the right anchor
+8th | poisson_p-value | poisson test p-value for the loop
+9th | ra | observed PETs number for the left anchor
+10th | rab | observed PETs number linking the left and right anchors
+11th | rb | observed PETs number for the right anchor
+12th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
+13th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
+14th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
+15th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, both binomal\_p-value and poisson\_p-value <=1e-5. You can ignore this and customize your cutoffs by visualization in the [Juicebox](https://github.com/theaidenlab/juicebox) or [washU](http://epigenomegateway.wustl.edu/) to determine your cutoffs.
 
 --------
 ## Examples
