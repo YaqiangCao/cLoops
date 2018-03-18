@@ -13,6 +13,7 @@ pipe.py
 2017-08-10: to do, re-design data structure as using HDF5 as botoom structure to reduce memory usage
 2017-08-18: changed combine method for loops when runing a series of eps.
 2018-03-13: modified combining method for multiple eps
+2018-03-18: modified pre-processing bedpe files.
 """
 
 __author__ = "CAO Yaqiang"
@@ -33,7 +34,7 @@ from joblib import Parallel, delayed
 #cLoops
 from cLoops.settings import *
 from cLoops.utils import getLogger, callSys, cFlush, mainHelp
-from cLoops.io import parseRawBedpe, txt2jd, parseJd, loops2washU, loops2juice
+from cLoops.io import parseRawBedpe, parseRawBedpe2,txt2jd, parseJd, loops2washU, loops2juice
 from cLoops.cDBSCAN import cDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
@@ -199,7 +200,10 @@ def pipe(fs,
         return
     os.mkdir(fout)
     #2.read in PETs, collect cis PETs and convert to .jd format, if not assigned eps (eps=0),estimate eps
-    cfs, ds = parseRawBedpe(fs, fout, chroms, cut, logger)
+    if eps == 0:
+        cfs, ds = parseRawBedpe(fs, fout, chroms, cut, logger)
+    else:
+        cfs = parseRawBedpe2(fs, fout, chroms, cut, logger)
     cfs = Parallel(n_jobs=cpu)(delayed(txt2jd)(f) for f in cfs)
     #3. run the DBSCAN only one time
     if eps == 0:
@@ -287,8 +291,8 @@ def main():
         minPts = 5
         hic = 0
     if op.mode == 3:
-        eps = [1000, 2000, 4000, 6000, 8000, 10000]
-        minPts = 20
+        eps = [2000, 5000, 10000]
+        minPts = 30
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)

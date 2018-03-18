@@ -125,6 +125,66 @@ def parseRawBedpe(fs, fout, cs, cut, logger):
     return cfs, ds
 
 
+def parseRawBedpe2(fs, fout, cs, cut, logger):
+    """
+    Get the cis-PETs, organized by chromosomes. Input could be mixed PETs in bedpe.gz. Also change read id to numbers.
+    @param fs: bedpe files of replicates, could be .bedpe or .bedpe.gz
+    @param fout: output prefix, the name for directory
+    @param cs: chroms that wanted, list like ["chr1","chr2"]
+    """
+    #chroms data
+    chroms = {}
+    #cis files
+    cfs = []
+    #distance between PETs mapped to different strands
+    ds = []
+    i, j, = 0, 0
+    for f in fs:
+        r = "Parsing PETs from %s, requiring initial distance cutoff > %s" % (
+            f, cut)
+        logger.info(r)
+        if f.endswith(".gz"):
+            of = gzip.open(f, "rb")
+        else:
+            of = open(f)
+        for line in of:
+            i += 1
+            if i % 100000 == 0:
+                cFlush("%s PETs processed from %s" % (i, f))
+            line = line.split("\n")[0].split("\t")
+            if "*" in line and "-1" in line:
+                continue
+            if len(line) < 6:
+                continue
+            try:
+                pet = PET(line)
+            except:
+                continue
+            #cis reads
+            if pet.chromA != pet.chromB:
+                continue
+            #filtering unwanted PETs in chroms
+            if len(cs) > 0 and (not (pet.chromA in cs)):
+                continue
+            #filtering too close PETs
+            if cut > 0 and pet.distance < cut:
+                continue
+            if pet.chromA not in chroms:
+                cf = os.path.join(fout,
+                                  "%s-%s" % (pet.chromA, pet.chromB) + ".txt")
+                chroms[pet.chromA] = {"f": open(cf, "w"), "c": 0}
+                cfs.append(cf)
+            nline = [chroms[pet.chromA]["c"], pet.cA, pet.cB]
+            chroms[pet.chromA]["f"].write("\t".join(map(str, nline)) + "\n")
+            chroms[pet.chromA]["c"] += 1
+            j += 1
+    print
+    del chroms
+    r = "Totaly %s PETs from %s, in which %s cis PETs" % (i, ",".join(fs), j)
+    logger.info(r)
+    return cfs
+
+
 def txt2jd(f):
     """
     Dump the np.ndarray using joblib.dump for fast access.
