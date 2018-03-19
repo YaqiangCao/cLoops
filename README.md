@@ -61,7 +61,7 @@ column | name | explaination
 12th | poisson\_p-value\_corrected | Bonferroni corrected poisson p-value according to number of loops for each chromosome
 13th | binomal\_p-value\_corrected | Bonferroni corrected binomal p-value according to number of loops for each chromosome
 14th | hypergeometric\_p-value\_corrected | Bonferroni corrected hypergeometric p-value according to number of loops for each chromosome
-15th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. For ChIA-PET data, significant requiring ES >=1.0, FDR <=0.05, hypergeometric\_local\_FDR <=0.05 and all uncorrected p-values <= 1e-5; For HiChIP and high resolution Hi-C data, significant requiring ES >= 2.0, FDR <=0.05, both binomal\_p-value and poisson\_p-value <=1e-5. You can ignore this and customize your cutoffs by visualization in the [Juicebox](https://github.com/theaidenlab/juicebox) or [washU](http://epigenomegateway.wustl.edu/) to determine your cutoffs.
+15th | significant | 1 or 0, 1 means we think the loop is significant compared to permutated regions. You can ignore this and customize your cutoffs using above values by visualization a small chromosome in the [Juicebox](https://github.com/theaidenlab/juicebox) or [washU](http://epigenomegateway.wustl.edu/).
 
 --------
 ## Examples
