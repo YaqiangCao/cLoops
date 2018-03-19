@@ -1,4 +1,4 @@
-# cLoops: a clustering based loops calling method for ChIA-PET, HiChIP and Hi-C
+# cLoops: Loops calling for ChIA-PET, HiChIP and Hi-C
 ![](https://github.com/YaqiangCao/cLoops/raw/master/cLoops.png)
 
 ## Introduction
