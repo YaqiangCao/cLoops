@@ -1,5 +1,5 @@
 # cLoops: loops calling for ChIA-PET, HiChIP and Hi-C
-![](https://github.com/YaqiangCao/cLoops/raw/master/cLoops.png)
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
 
 ## Introduction
 Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm called cDBSCAN. The significances of the inter-ligation clusters are then estimated using permutated local background. Both steps are data type independent, and thus enable cLoops to be applicable to even new genome-wide interaction mapping to be developed in the future.
@@ -49,7 +49,7 @@ column | name | explaination
 3th | binomal\_p-value | binomal test p-value for the loop
 4th | distance | distance (bp) between the centers of the anchors for the loop
 5th | hypergeometric\_p-value | hypergeometric test p-value for the loop
-6th | iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
+6th i| iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
 7th | ivb | genomic coordinates for the right anchor
 8th | poisson_p-value | poisson test p-value for the loop
 9th | ra | observed PETs number for the left anchor
@@ -115,6 +115,8 @@ Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops
 ```
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 ```
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/FingerprintPlot.png)
+
 
 --------
 ## Other data  
@@ -124,10 +126,12 @@ In theory cLoops could be applied to more 3D genomic data as long as there are e
 --------
 ## Questions & Answers  
 Please address questions and bugs to Yaqiang Cao (caoyaqiang0410@gmail.com) or Daosheng Ai (aidaosheng@picb.ac.cn) or Zhaoxiong Chen (chenzhaoxiong@picb.ac.cn), using the subject as "cLoops: questions about" to escape misjudged as spams.  
+
 Following are selected questions:
+
 -------
-1. HiC-Pro to bedpe
+1. HiC-Pro to bedpe     
 The [allValidPairs](http://nservant.github.io/HiC-Pro/MANUAL.html#browsing-the-results) can be converted to BEDPE file. You can define a extension size (like half of the reads length) along the reads strand direction. In cLoops' first step, all coordinates are converted from (startA+endA)/2,(startB+endB)/2 to (x,y), so actually the extension size doesn't matter.
 
-2. inter-chromosomal loops
+2. inter-chromosomal loops    
 So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version.
