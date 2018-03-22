@@ -7,6 +7,7 @@ Calling differentially enriched loops between one TF for different cells/conditi
 2017-06-19: small bugs for np.mean([]) will get a nan, fixed
 2017-06-21: improved efficiency.
 2017-08-03: modified data structure
+2018-03-22: to be continued by CHEN Zhaoxiong
 """
 __date__ = "2017-06-16"
 __modified__ = ""
@@ -30,7 +31,7 @@ from cLoops.cModel import getGenomeCoverage, getCounts, getNearbyPairRegions, ge
 global logger
 
 
-def preDs(f, d, chroms=[], ivac=7, ivbc=8):
+def preDs(f, d, chroms=[], ivac=6, ivbc=7):
     """
     Prepare input datasets, f is the .loop file and d is the directory contains parsed cis-PETs.
     """
@@ -95,7 +96,7 @@ def getPermutatedBg(ivas, ivbs, model):
     return mrabs
 
 
-def estSigOneLoop(iva, ivb, modelt, modelc, normratio, win=6):
+def estSigOneLoop(iva, ivb, modelt, modelc, normratio, win=5):
     """
     Estimating the significance for a loop.
     """

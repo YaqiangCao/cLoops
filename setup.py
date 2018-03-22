@@ -23,6 +23,8 @@ setup(name='cLoops',
             'cLoops=cLoops.pipe:main',
                 ],
         },
-    scripts = ["scripts/deLoops","scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
+    #scripts = ["scripts/deLoops","scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
+    #temply disable deLoops for furthur development
+    scripts = ["scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
 
     )

@@ -291,8 +291,8 @@ def main():
         minPts = 5
         hic = 0
     if op.mode == 3:
-        eps = [1000, 2000, 4000, 6000, 8000, 10000]
-        minPts = 20
+        eps = [2000, 5000, 10000]
+        minPts = 30
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)
