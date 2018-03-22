@@ -30,7 +30,7 @@ Please refer to [here](https://docs.python.org/2/install/index.html) to install 
 ## Usage
 Run ***cLoops -h*** to see all options. Key parameters are ***eps*** and ***minPts*** . ***minPts*** defines at least how many PETs are required for a candidate loop, ***eps*** defines the distance requried for two PETs being neighbors. For ChIA-PET data with sharp peaks, cLoops can auto estimate ***eps*** from the data as 2 fold of the fragment size, and ***minPts***=5 is empirical good. For ChIA-PET data with broad peaks (like H3K4me1), empirical experience is set ***eps*** to 2000,5000. For HiChIP, set a series ***eps***=2000,4000,6000,8000,10000 & ***minPts***=20 worth a first trial, if deeply sequenced, increase ***minPts*** to 30 or 50. For practically usage, using the PETs in the smallest chromosome except chrY and chrM, then run a series of ***eps***, choose the smallest ***eps*** that can get well seperated inter-ligation and self-ligation PETs distance distributions. Or just apply a series of ***eps***,all rounds clustering result will be combined. Actually, there will be more significant loops given more ***eps***, but it will take longer time.
 
-Since version 0.8, cLoops added a new parameter ***--mode(-m)***, which is the pre-set parameters for different types of data. -m 0 accepts user settings; -m 1 equals -eps 500,1000,2000 -minPts 5 for sharp peak like ChIA-PET data; -m 2 equals -eps 1000,2000,5000 -minPts 5 for broad peak like ChIA-PET data; -m 3 equals -eps 2000,5000,10000 -minPts 30 -hic 1 for HiChIP and Hi-C data. 
+Since version 0.8, cLoops added a new parameter **--mode(-m)**, which is the pre-set parameters for different types of data. -m 0 accepts user settings; -m 1 equals -eps 500,1000,2000 -minPts 5 for sharp peak like ChIA-PET data; -m 2 equals -eps 1000,2000,5000 -minPts 5 for broad peak like ChIA-PET data; -m 3 equals -eps 2000,5000,10000 -minPts 30 -hic 1 for deep sequenced HiChIP and Hi-C data. 
 
 --------
 ### Input  
@@ -70,7 +70,7 @@ We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
 cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -j 1
 ```      
-For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following, the two kinds of PETs well seperated:
+For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following, the two kinds of PETs well seperated using auto estimated ***eps***:
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/chiapet_disCutoff.png)
 
 If your experimental data doesn't look like this by auto estimated ***eps***, which could be true for some ChIA-PET data with broad peak (like H3K27ac), please use the small chromosome (chr21 in human and chr19 in mouse) run a series of ***eps***, then chose the smallest one that generate the well seperated distance distribution to run cLoops, or just using the series. 
@@ -102,19 +102,32 @@ With the adjustment of resolution, color range and how to show the loops, then y
 We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. Run the the command as following to call loops.
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz 
-cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -eps 2000,4000,6000,8000,10000 -minPts 30 -s 1 -hic 1
+cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -eps 2000,4000,6000,8000,10000 -minPts 30 -s 1 -hic 1
+```   
+or just run following for version >= 0.8:
+
+```
+cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -m 3
 ```   
 
 ### 4. Fingerprint plot for data qualities comparasion of loops calling 
-Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/compare_fingerprint.pdf), the far from the random line, the better for the data used to call loops by cLoops.
+Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/compare_fingerprint.pdf), the far from the random line, the better for the data used to call loops by cLoops. You can using this to estimate data qualities between samples.
 ```
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 ```
+
 --------
 ## Other data  
-In theory cLoops could be applied to more 3D genomic data as long as there are enriched clusters in the heatmap, however, parameters and significance cutoffs should be tuned. We're now trying to make cLoops work for [GRID-seq](https://www.nature.com/articles/nbt.3968) and [Capture HiC](https://www.nature.com/articles/ng.3286). If you have designed a new sequencing based 3D genomic method and want to try cLoops, please contact caoyaqiang@picb.ac.cn first.
+In theory cLoops could be applied to more 3D genomic data as long as there are enriched clusters in the heatmap, however, parameters and significance cutoffs should be tuned. We're now trying to make cLoops work for [GRID-seq](https://www.nature.com/articles/nbt.3968) and [Capture HiC](https://www.nature.com/articles/ng.3286). If you have designed a new sequencing based 3D genomic method and want to try cLoops, please contact caoyaqiang0410@gmail.com first.
 
 
 --------
 ## Questions & Answers  
-Please address questions and bugs to Yaqiang Cao (caoyaqiang@picb.ac.cn) or Xingwei Chen (chenxingwei@picb.ac.cn) or Daosheng Ai (aidaosheng@picb.ac.cn), using the subject as "cLoops: questions about" to escape misjudged as spams.  
+Please address questions and bugs to Yaqiang Cao (caoyaqiang0410@gmail.com) or Daosheng Ai (aidaosheng@picb.ac.cn) or Zhaoxiong Chen (chenzhaoxiong@picb.ac.cn), using the subject as "cLoops: questions about" to escape misjudged as spams.  
+Following are selected questions:
+-------
+1. HiC-Pro to bedpe
+The [allValidPairs](http://nservant.github.io/HiC-Pro/MANUAL.html#browsing-the-results) can be converted to BEDPE file. You can define a extension size (like half of the reads length) along the reads strand direction. In cLoops' first step, all coordinates are converted from (startA+endA)/2,(startB+endB)/2 to (x,y), so actually the extension size doesn't matter.
+
+2. inter-chromosomal loops
+So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version.
