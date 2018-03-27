@@ -5,6 +5,8 @@ Stastical significance is tested for every chromosome using the local permutated
 2018-02-01: improved data structure for genomecoverage,much faster and less memory than previouse version for significance calling,slightly changed the loops boundary.
 2018-03-08: modified ChIA-PET significant loops cutoff
 2018-03-16: key change, sliding step changed to the half of the mean anchor size always get more significant loops
+2018-03-23: modified merging overlapped loops, significant loops with smaller anchors are first selected
+2018-03-26: modified to speed up
 """
 __date__ = "2017-03-15"
 __modified__ = ""
@@ -54,7 +56,7 @@ def getGenomeCoverage(f, cut=0):
         return None, 0
     xs = getCorLink(mat[:, 1])
     ys = getCorLink(mat[:, 2])
-    return [xs, ys], j 
+    return [xs, ys], j
 
 
 def getCounts(iv, ts):
@@ -91,7 +93,7 @@ def getNearbyPairRegions(iva, ivb, win=5):
     cb = sum(ivb) / 2
     sa = (iva[1] - iva[0]) / 2
     sb = (ivb[1] - ivb[0]) / 2
-    step = (sa + sb)/2
+    step = (sa + sb) / 2
     for i in xrange(0 - win, win + 1):
         if i == 0:
             continue
@@ -108,22 +110,29 @@ def getNearbyPairRegions(iva, ivb, win=5):
 
 def getMultiplePsFdr(iva, ivb, model, N, win=5):
     """
-    for the interval a and b, searching its nearby windows to estimate FDR and p-values. THe idea that using  matched nearby windows, which could have similar distance with a & b, needs too many windows. 
-    return ra, rb, rab, es, fdr, hyp, chyp, pop, nbp
+    for the interval a and b, searching its nearby windows to estimate FDR and p-values.  
+    return ra, rb, rab, es,es_ra,es_rb, fdr, hyp, pop, nbp
     """
     ra, rb, rab = getPETsforRegions(iva, ivb, model)
-    hyp = max([1e-300,hypergeom.sf(rab - 1.0, N, ra, rb)])
+    hyp = max([1e-300, hypergeom.sf(rab - 1.0, N, ra, rb)])
     ivas, ivbs = getNearbyPairRegions(iva, ivb, win=win)
-    hyps, rabs, nbps = [], [], []
+    #nras is a list for storing points ids for permutated regions
+    nras, nrbs = [], []
     for na in ivas:
         nraSource = getCounts(na, model[0])
         nraTarget = getCounts(na, model[1])
         nra = nraSource.union(nraTarget)
+        nras.append(nra)
+    for nb in ivbs:
+        nrbSource = getCounts(nb, model[0])
+        nrbTarget = getCounts(nb, model[1])
+        nrb = nrbSource.union(nrbTarget)
+        nrbs.append(nrb)
+    #caculating the permutated background
+    rabs, nbps = [], []
+    for nra in nras:
         nralen = float(len(nra))
-        for nb in ivbs:
-            nrbSource = getCounts(nb, model[0])
-            nrbTarget = getCounts(nb, model[1])
-            nrb = nrbSource.union(nrbTarget)
+        for nrb in nrbs:
             nrblen = len(nrb)
             nrab = float(len(nra.intersection(nrb)))
             if nrab > 0:
@@ -134,27 +143,25 @@ def getMultiplePsFdr(iva, ivb, model, N, win=5):
                 nbps.append(den)
             else:
                 nbps.append(0.0)
-                hyps.append(0.0)
                 rabs.append(0.0)
     if len(rabs) == 0:
         return ra, rb, rab, np.inf, 0.0, hyp, 0.0, 1e-300, 1e-300,
-    hyps, rabs = np.array(hyps), np.array(rabs)
+    rabs = np.array(rabs)
     #local fdr
     fdr = len(rabs[rabs > rab]) / float(len(rabs))
     mrabs = float(np.mean(rabs))
     #enrichment score
     if mrabs > 0:
-        es = rab / np.mean(rabs[rabs>0])
+        es = rab / np.mean(rabs[rabs > 0])
     else:
         es = np.inf
     #simple possion test
     lam = mrabs
-    pop = max([1e-300,poisson.sf(rab - 1.0, lam)])
+    pop = max([1e-300, poisson.sf(rab - 1.0, lam)])
     #simple binomial test
     bp = np.mean(nbps) * ra * rb / N
-    nbp = max([1e-300,binom.sf(rab - 1.0, N - rab, bp)])
+    nbp = max([1e-300, binom.sf(rab - 1.0, N - rab, bp)])
     return ra, rb, rab, es, fdr, hyp, pop, nbp
-
 
 
 def getBonPvalues(ps):
@@ -188,8 +195,7 @@ def checkOverlap(ra, rb):
     return False
 
 
-
-def removeDup(ds):
+def removeDup(ds, bpcut=1e-5):
     """
     Remove overlapped called loops, keep the more significant one for multiple eps result. 
     @param:ds, from getIntSig
@@ -198,7 +204,7 @@ def removeDup(ds):
     reds = {}
     rekeys = set()
     keys = ds.keys()
-    for i in xrange(len(keys)):
+    for i in xrange(len(keys) - 1):
         keyi = keys[i]
         if keyi in rekeys:
             continue
@@ -231,14 +237,28 @@ def removeDup(ds):
     for key in reds.keys():
         ts = {}
         for t in reds[key]:
-            ts[t] = ds[t]["binomial_p-value"]
+            if ds[t]["binomial_p-value"] > bpcut:
+                continue
+            #ts[t] = ds[t]["binomial_p-value"]
+            #first select the significant loops, then select the loops with smaller anchors and higher density
+            ts[t] = float(ds[t]["rab"]) / ds[t]["ra"] / ds[t]["rb"]
+        """
+        Used for debugging
             iva = parseIv(ds[t]["iva"])
             ivb = parseIv(ds[t]["ivb"])
+            a = iva[2]-iva[1]+ivb[2]-ivb[1]
+            b = float(ds[t]["rab"])/ds[t]["ra"]/ds[t]["rb"]
+            c = float(ds[t]["rab"])/a
+            print t
+            print a,b,c,ds[t]["rab"],ds[t]["ra"],ds[t]["rb"],ds[t]["ES"],ds[t]["binomial_p-value"],ds[t]["poisson_p-value"]
+        print 
+        """
+        if len(ts) == 0:
+            continue
         ts = pd.Series(ts)
-        ts.sort_values(inplace=True, ascending=True)
+        ts.sort_values(inplace=True, ascending=False)
         uniqueds[ts.index[0]] = ds[ts.index[0]]
     return uniqueds
-
 
 
 def getIntSig(f, records, minPts, discut):
@@ -294,6 +314,8 @@ def getIntSig(f, records, minPts, discut):
     if len(ds.keys()) == 0:
         return None
     ds = removeDup(ds)
+    if len(ds.keys()) == 0:
+        return None
     ds = pd.DataFrame(ds).T
     ds["poisson_p-value_corrected"] = getBonPvalues(ds["poisson_p-value"])
     ds["binomial_p-value_corrected"] = getBonPvalues(ds["binomial_p-value"])
@@ -333,7 +355,7 @@ def markIntSig(ds,
     return ds
 
 
-def markIntSigHic(ds, escut=2.0, fdrcut=0.05, pcut=1e-5):
+def markIntSigHic(ds, escut=2.0, fdrcut=0.01, bpcut=1e-5, ppcut=1e-5):
     """
     For HiChIP/HiC data, hypergeometric test is not working, poisson and binomial works well. For mouse data, pcut=1e-3 maybe better
     """
@@ -343,12 +365,12 @@ def markIntSigHic(ds, escut=2.0, fdrcut=0.05, pcut=1e-5):
     a = a[a >= escut]
     #smaller FDR
     b = ds.loc[a.index, "FDR"]
-    b = b[b <= fdrcut]
+    b = b[b < fdrcut]
     #smaller poisson and binomial result
     c = ds.loc[b.index, "poisson_p-value"]
-    c = c[c <= pcut]
+    c = c[c <= ppcut]
     d = ds.loc[b.index, "binomial_p-value"]
-    d = d[d <= pcut]
+    d = d[d <= bpcut]
     e = c.index.intersection(d.index)
     ns = pd.Series(data=np.zeros(ds.shape[0]), index=ds.index)
     ns[e] = 1.0

@@ -14,6 +14,7 @@ pipe.py
 2017-08-18: changed combine method for loops when runing a series of eps.
 2018-03-13: modified combining method for multiple eps
 2018-03-18: modified pre-processing bedpe files.
+2018-03-27: modifed merging clustering by remove close PETs
 """
 
 __author__ = "CAO Yaqiang"
@@ -34,11 +35,11 @@ from joblib import Parallel, delayed
 #cLoops
 from cLoops.settings import *
 from cLoops.utils import getLogger, callSys, cFlush, mainHelp
-from cLoops.io import parseRawBedpe, parseRawBedpe2,txt2jd, parseJd, loops2washU, loops2juice
+from cLoops.io import parseRawBedpe, parseRawBedpe2, txt2jd, parseJd, loops2washU, loops2juice
 from cLoops.cDBSCAN import cDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
-from cLoops.cModel import getIntSig, markIntSig, markIntSigHic
+from cModel import getIntSig, markIntSig, markIntSigHic
 
 #global settings
 global logger
@@ -50,7 +51,12 @@ def singleDBSCAN(f, eps, minPts, cut=0):
     #mat is list, every is [ pointId,x,y ]
     """
     dataI, readI, dataS, readS, dis, dss = [], [], [], [], [], []
-    key, mat = parseJd(f, cut)
+    key, mat = parseJd(f, cut=0)
+    if cut > 0:
+        d = mat[:, 2] - mat[:, 1]
+        p = np.where(d >= cut)[0]
+        mat = mat[p, :]
+        dss.extend(list(d[d < cut]))
     if len(mat) == 0:
         return key, f, dataI, dataS, list(dis), list(dss)
     #data for interaction records, read for readId
@@ -95,7 +101,7 @@ def singleDBSCAN(f, eps, minPts, cut=0):
     if len(dataI) > 0:
         dis = mat.loc[readI, "Y"] - mat.loc[readI, "X"]
     if len(dataS) > 0:
-        dss = mat.loc[readS, "Y"] - mat.loc[readS, "X"]
+        dss.extend(list(mat.loc[readS, "Y"] - mat.loc[readS, "X"]))
     return key, f, dataI, dataS, list(dis), list(dss)
 
 
@@ -114,6 +120,22 @@ def runDBSCAN(fs, eps, minPts, cut=0, cpu=1):
         dis.extend(d[4])
         dss.extend(d[5])
     return dataI, dataS, dis, dss
+
+
+def filterClusterByDis(data, cut):
+    """
+    Filter inter-ligation clusters by distances
+    """
+    for key in data:
+        nr = []
+        #print len(data[key]["records"])
+        for r in data[key]["records"]:
+            d = (r[4] + r[5]) / 2 - (r[1] + r[2]) / 2
+            if d >= cut:
+                nr.append(r)
+        data[key]["records"] = nr
+        #print len(data[key]["records"])
+    return data
 
 
 def checkSameLoop(ra, rb):
@@ -219,13 +241,16 @@ def pipe(fs,
     else:
         #3.1. run DBSCAN for multiple times
         dataI = {}
-        cuts = []
+        dis, dss = [], []
+        cuts = [
+            cut,
+        ]
         for ep in eps:
             dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, minPts, cut,
                                                        cpu)
-            if len(dataI_2) == 0 or len(dataS_2) == 0:
+            if len(dataI_2) == 0:
                 logger.info(
-                    "ERROR: no inter-ligation PETs or self-ligation PETs detected for eps %s,can't model the distance cutoff,continue anyway"
+                    "ERROR: no inter-ligation PETs detected for eps %s,can't model the distance cutoff,continue anyway"
                     % ep)
                 continue
             cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
@@ -238,8 +263,11 @@ def pipe(fs,
             logger.info(
                 "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s."
                 % (cut_2, ep))
+            #experimental
+            cut = cut_2
             cuts.append(cut_2)
-            #combine the first round and second round result
+            #combine the clustering result, for the later ones always filter it
+            #dataI_2 = filterClusterByDis(dataI_2, cut_2)
             dataI = combineTwice(dataI, dataI_2)
         #cut = min(cuts)
         cut = np.max(cuts)
@@ -254,6 +282,7 @@ def pipe(fs,
         loops2washU(fout + ".loop", fout + "_loops_washU.txt", logger)
     if juice:
         loops2juice(fout + ".loop", fout + "_loops_juicebox.txt", logger)
+        #loops2juice(fout + ".loop", fout + "_loops_juicebox.txt", logger,0)
     #7.remove temple files
     if tmp == False:
         shutil.rmtree(fout)
@@ -291,8 +320,9 @@ def main():
         minPts = 5
         hic = 0
     if op.mode == 3:
-        eps = [2000, 5000, 10000]
-        minPts = 30
+        #eps = [2000, 5000, 10000]
+        eps = [2000, 4000, 6000, 8000, 10000]
+        minPts = 20
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)

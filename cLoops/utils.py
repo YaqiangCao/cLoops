@@ -3,13 +3,14 @@
 """
 2018-03-08: modified default minPts to 3
 2018-03-13: mode added for pre-set parameters
+2018-03-26: modified cut option , removed
 """
 
 __author__ = "CAO Yaqiang"
 __date__ = ""
 __modified__ = ""
 __email__ = "caoyaqiang0410@gmail.com"
-__version__ = "0.8"
+__version__ = "0.9"
 
 #sys library
 import os, time, sys, logging, gzip, argparse
@@ -174,7 +175,9 @@ def mainHelp():
         required=False,
         default=0,
         type=int,
-        help="Initial distance cutoff to filter PETs, default is 0.")
+        help=
+        "Initial distance cutoff to filter PETs, default is 0, only used for debuging."
+    )
     parser.add_argument(
         "-v",
         dest="version",
