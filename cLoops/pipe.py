@@ -39,7 +39,7 @@ from cLoops.io import parseRawBedpe, parseRawBedpe2, txt2jd, parseJd, loops2wash
 from cLoops.cDBSCAN import cDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
-from cModel import getIntSig, markIntSig, markIntSigHic
+from cLoops.cModel import getIntSig, markIntSig, markIntSigHic
 
 #global settings
 global logger

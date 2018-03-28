@@ -316,6 +316,10 @@ def getIntSig(f, records, minPts, discut):
     ds = removeDup(ds)
     if len(ds.keys()) == 0:
         return None
+    #just in case
+    ds = removeDup(ds)
+    if len(ds.keys()) == 0:
+        return None
     ds = pd.DataFrame(ds).T
     ds["poisson_p-value_corrected"] = getBonPvalues(ds["poisson_p-value"])
     ds["binomial_p-value_corrected"] = getBonPvalues(ds["binomial_p-value"])
