@@ -7,6 +7,7 @@ Stastical significance is tested for every chromosome using the local permutated
 2018-03-16: key change, sliding step changed to the half of the mean anchor size always get more significant loops
 2018-03-23: modified merging overlapped loops, significant loops with smaller anchors are first selected
 2018-03-26: modified to speed up
+2018-03-28: modified the mergeing method, small bugs fixed
 """
 __date__ = "2017-03-15"
 __modified__ = ""
@@ -178,19 +179,21 @@ def checkOneEndOverlap(xa, xb, ya, yb):
     """
     check the overlap of a region for the same chromosome
     """
-    if ya <= xa <= yb or ya <= xb <= yb:
+    if (ya <= xa <= yb) or (ya <= xb <= yb) or (ya <= xa <= xb <= yb):
         return True
-    if xa <= ya <= xb or xa <= yb <= xb:
+    if (xa <= ya <= xb) or (xa <= yb <= xb) or (xa <= ya <= yb <= xb):
         return True
     return False
 
 
-def checkOverlap(ra, rb):
+def checkOverlap(ivai,ivbi,ivaj,ivbj):
     """
     check the overlap of two anchors,ra=[chr,left_start,left_end,right_start,right_end]
     """
-    if checkOneEndOverlap(ra[1], ra[2], rb[1], rb[2]) and checkOneEndOverlap(
-            ra[4], ra[5], rb[4], rb[5]):
+    if ivai[0] != ivaj[0] or ivbi[0] != ivbj[0]:
+        return 
+    if checkOneEndOverlap(ivai[1], ivai[2], ivaj[1], ivaj[2]) and checkOneEndOverlap(
+            ivbi[1], ivbi[2], ivbj[1], ivbj[2]):
         return True
     return False
 
@@ -219,9 +222,7 @@ def removeDup(ds, bpcut=1e-5):
                 continue
             ivaj = parseIv(ds[keyj]["iva"])
             ivbj = parseIv(ds[keyj]["ivb"])
-            flagj = checkOverlap([
-                ivai[0], ivai[1], ivai[2], ivbi[0], ivbi[1], ivbi[2]
-            ], [ivaj[0], ivaj[1], ivaj[2], ivbj[0], ivbj[1], ivbj[2]])
+            flagj = checkOverlap(ivai,ivbi,ivaj,ivbj)
             #there is overlapped loops,collect them
             if flagj:
                 if keyi not in reds:
@@ -273,6 +274,7 @@ def getIntSig(f, records, minPts, discut):
         print "No cis-PETs parsed as requiring distance cutoff >%s from %s" % (
             discut, f)
         return None
+    #print "records:",len(records) #used for debuging
     ds = {}
     i = 0
     for r in records:
@@ -286,7 +288,8 @@ def getIntSig(f, records, minPts, discut):
             continue
         ra, rb, rab = getPETsforRegions(iva, ivb, model)
         #filter clusters contain many self-ligation PETs within distance cutoff
-        if rab < minPts:
+        #if rab < min(minPts):
+        if rab < max(minPts):
             continue
         i += 1
         if i % 100 == 0:
@@ -311,15 +314,17 @@ def getIntSig(f, records, minPts, discut):
     del model
     gc.collect()
     print
+    #print "records before remove duplicates:",len(ds) #used for debuging
     if len(ds.keys()) == 0:
         return None
     ds = removeDup(ds)
     if len(ds.keys()) == 0:
         return None
-    #just in case
+    #print "records after remove duplicates:",len(ds) #used for debuging
     ds = removeDup(ds)
     if len(ds.keys()) == 0:
         return None
+    #print "records after remove duplicates again:",len(ds) #used for debuging
     ds = pd.DataFrame(ds).T
     ds["poisson_p-value_corrected"] = getBonPvalues(ds["poisson_p-value"])
     ds["binomial_p-value_corrected"] = getBonPvalues(ds["binomial_p-value"])

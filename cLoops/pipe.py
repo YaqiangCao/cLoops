@@ -15,6 +15,7 @@ pipe.py
 2018-03-13: modified combining method for multiple eps
 2018-03-18: modified pre-processing bedpe files.
 2018-03-27: modifed merging clustering by remove close PETs
+2018-03-30: multiple minPts mode added
 """
 
 __author__ = "CAO Yaqiang"
@@ -209,7 +210,8 @@ def pipe(fs,
          washU=0,
          juice=0,
          cut=0,
-         org="hg38"):
+         plot=0,
+         ):
     if chroms == "":
         chroms = []
     else:
@@ -234,7 +236,8 @@ def pipe(fs,
         dataI, dataS, dis, dss = runDBSCAN(cfs, eps, minPts, cut, cpu)
         #4.estimate cutoff of self-ligation and inter-ligation
         cut, frags = estIntSelCutFrag(np.array(dis), np.array(dss))
-        plotIntSelCutFrag(dis, dss, cut, frags, prefix=fout + "_disCutoff")
+        if plot:
+            plotIntSelCutFrag(dis, dss, cut, frags, prefix=fout + "_disCutoff")
         logger.info(
             "Estimated inter-ligation and self-ligation distance cutoff as %s"
             % cut)
@@ -245,30 +248,34 @@ def pipe(fs,
         cuts = [
             cut,
         ]
+        #multiple eps 
         for ep in eps:
-            dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, minPts, cut,
-                                                       cpu)
-            if len(dataI_2) == 0:
+            #multiple minPts, for minPts like 50,40,30,20, the bigger minPts always get smaller distance cutoff
+            for m in minPts:
+                dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, m, cut,
+                                                           cpu)
+                if len(dataI_2) == 0:
+                    logger.info(
+                        "ERROR: no inter-ligation PETs detected for eps %s minPts %s,can't model the distance cutoff,continue anyway"
+                        %(ep,m))
+                    continue
+                cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
+                if plot:
+                    plotIntSelCutFrag(
+                        dis_2,
+                        dss_2,
+                        cut_2,
+                        frags,
+                        prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep,m))
                 logger.info(
-                    "ERROR: no inter-ligation PETs detected for eps %s,can't model the distance cutoff,continue anyway"
-                    % ep)
-                continue
-            cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
-            plotIntSelCutFrag(
-                dis_2,
-                dss_2,
-                cut_2,
-                frags,
-                prefix=fout + "_eps%s_disCutoff" % ep)
-            logger.info(
-                "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s."
-                % (cut_2, ep))
-            #experimental
-            cut = cut_2
-            cuts.append(cut_2)
-            #combine the clustering result, for the later ones always filter it
-            #dataI_2 = filterClusterByDis(dataI_2, cut_2)
-            dataI = combineTwice(dataI, dataI_2)
+                    "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s,minPts=%s"
+                    % (cut_2, ep,m))
+                #experimental
+                cuts.append(cut_2)
+                cut = max(cuts) 
+                #combine the clustering result, for the later ones always filter it
+                #dataI_2 = filterClusterByDis(dataI_2, cut_2)
+                dataI = combineTwice(dataI, dataI_2)
         #cut = min(cuts)
         cut = np.max(cuts)
         #cut = np.median(cuts)
@@ -282,7 +289,6 @@ def pipe(fs,
         loops2washU(fout + ".loop", fout + "_loops_washU.txt", logger)
     if juice:
         loops2juice(fout + ".loop", fout + "_loops_juicebox.txt", logger)
-        #loops2juice(fout + ".loop", fout + "_loops_juicebox.txt", logger,0)
     #7.remove temple files
     if tmp == False:
         shutil.rmtree(fout)
@@ -294,42 +300,53 @@ def main():
     fn = os.path.join(os.getcwd(), "cLoops.log")
     logger = getLogger(fn)
     op = mainHelp()
-    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {}".format(
+    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {} -plot {}".format(
         op.fnIn, op.fnOut, op.mode, op.eps, op.minPts, op.cpu, op.washU,
-        op.juice, op.tmp, op.chroms, op.hic, op.cut)
+        op.juice, op.tmp, op.chroms, op.hic, op.cut,op.plot)
     logger.info(report)
     if op.mode == 0:
+        #parse eps
         if "," in str(op.eps):
             eps = map(int, op.eps.split(","))
+            eps.sort(reverse=False)
         else:
             eps = int(op.eps)
             if eps != 0:
                 eps = [eps]
-        if op.minPts == 0:
-            logger.error("minPts not assigned!")
-            return
+        #parse minPts
+        if "," in str(op.minPts):
+            minPts = map(int, op.minPts.split(","))
+            minPts.sort(reverse=True)
         else:
-            minPts = op.minPts
+            minPts = int(op.minPts)
+            if minPts != 0:
+                minPts = [minPts]
+            else:
+                logger.error("minPts not assigned!")
+                return
         hic = op.hic
     if op.mode == 1:
         eps = [500, 1000, 2000]
-        minPts = 5
+        minPts = [5]
         hic = 0
     if op.mode == 2:
         eps = [1000, 2000, 5000]
-        minPts = 5
+        minPts = [5]
         hic = 0
     if op.mode == 3:
-        #eps = [2000, 5000, 10000]
-        eps = [2000, 4000, 6000, 8000, 10000]
-        minPts = 20
+        eps = [2500, 5000, 7500, 10000]
+        minPts = [50,40,30,20]
+        hic = 1
+    if op.mode == 3:
+        eps = [2500, 5000, 7500, 10000]
+        minPts = [50,40,30,20]
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)
     logger.info(report)
     pipe(
         op.fnIn.split(","), op.fnOut, eps, minPts, op.chroms, op.cpu, op.tmp,
-        hic, op.washU, op.juice, op.cut)
+        hic, op.washU, op.juice, op.cut,op.plot)
     usedtime = datetime.now() - start
     r = "cLoops finished. Used CPU time: %s Bye!\n\n\n" % usedtime
     logger.info(r)

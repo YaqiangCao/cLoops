@@ -178,6 +178,16 @@ def mainHelp():
         "Initial distance cutoff to filter PETs, default is 0, only used for debuging."
     )
     parser.add_argument(
+        "-plot",
+        dest="plot",
+        required=False,
+        default=0,
+        type=int,
+        help=
+        "Whether to plot estimated inter-ligation and self-ligation PETs distance distrbution, default is 0."
+    )
+ 
+    parser.add_argument(
         "-v",
         dest="version",
         action="version",
