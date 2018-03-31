@@ -112,7 +112,7 @@ def mainHelp():
         dest="minPts",
         default=0,
         help=
-        "Points required in a cluster, minPts in cDBSCAN, key parameter. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like >=20. Since v0.9, it can be a seires."
+        "Points required in a cluster, minPts in cDBSCAN, key parameter. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like >=20. Since v0.9, it can be a seires, and the final loops will have the PETs>= max(minPts)."
     )
     parser.add_argument(
         "-p",

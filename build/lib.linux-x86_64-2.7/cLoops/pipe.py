@@ -15,6 +15,7 @@ pipe.py
 2018-03-13: modified combining method for multiple eps
 2018-03-18: modified pre-processing bedpe files.
 2018-03-27: modifed merging clustering by remove close PETs
+2018-03-30: multiple minPts mode added
 """
 
 __author__ = "CAO Yaqiang"
@@ -332,6 +333,10 @@ def main():
         eps = [1000, 2000, 5000]
         minPts = [5]
         hic = 0
+    if op.mode == 3:
+        eps = [2500, 5000, 7500, 10000]
+        minPts = [50,40,30,20]
+        hic = 1
     if op.mode == 3:
         eps = [2500, 5000, 7500, 10000]
         minPts = [50,40,30,20]
