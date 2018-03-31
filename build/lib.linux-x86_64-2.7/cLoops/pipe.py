@@ -272,12 +272,12 @@ def pipe(fs,
                     % (cut_2, ep,m))
                 #experimental
                 cuts.append(cut_2)
-                cut = max(cuts) 
-                #combine the clustering result, for the later ones always filter it
-                #dataI_2 = filterClusterByDis(dataI_2, cut_2)
+                #cut = max(cuts) 
+                cut = cut_2
                 dataI = combineTwice(dataI, dataI_2)
-        #cut = min(cuts)
-        cut = np.max(cuts)
+        cuts = [ c for c in cuts if c>0]
+        cut = np.min(cuts)
+        #cut = np.max(cuts)
         #cut = np.median(cuts)
     #5.estimate the significance
     e = runStat(dataI, minPts, cut, cpu, fout, hic)
@@ -334,11 +334,7 @@ def main():
         minPts = [5]
         hic = 0
     if op.mode == 3:
-        eps = [2500, 5000, 7500, 10000]
-        minPts = [50,40,30,20]
-        hic = 1
-    if op.mode == 3:
-        eps = [2500, 5000, 7500, 10000]
+        eps = [ 5000, 7500, 10000]
         minPts = [50,40,30,20]
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,

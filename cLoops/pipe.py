@@ -16,6 +16,7 @@ pipe.py
 2018-03-18: modified pre-processing bedpe files.
 2018-03-27: modifed merging clustering by remove close PETs
 2018-03-30: multiple minPts mode added
+2018-03-31: modified self-ligation and inter-ligation distance cutoff selection.
 """
 
 __author__ = "CAO Yaqiang"
@@ -278,7 +279,6 @@ def pipe(fs,
         cuts = [ c for c in cuts if c>0]
         cut = np.min(cuts)
         #cut = np.max(cuts)
-        #cut = np.median(cuts)
     #5.estimate the significance
     e = runStat(dataI, minPts, cut, cpu, fout, hic)
     if e:
