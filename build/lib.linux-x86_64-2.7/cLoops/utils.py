@@ -95,9 +95,9 @@ def mainHelp():
         required=False,
         type=int,
         default=0,
-        choices=[0, 1, 2, 3],
+        choices=[0, 1, 2, 3, 4],
         help=
-        "Pre-set parameters and signicicance cutoff for different types of data. Default is 0, using values from -eps and -minPts. Set 1 for sharp peak like ChIA-PET data (CTCF,RAD21,eg..),set 2 for broad peak like ChIA-PET data (H3K27ac,H3K4me1 eg..), and set 3 for Hi-C or HiChIP."
+        "Pre-set parameters and signicicance cutoff for different types of data. Default is 0, using values from -eps and -minPts. Set 1 for sharp peak like ChIA-PET data (CTCF,RAD21,eg..),set 2 for broad peak like ChIA-PET data (H3K27ac,H3K4me1 eg..), and set 3 for deep sequenced Hi-C, set 4 for HiChIP."
     )
     parser.add_argument(
         "-eps",
@@ -105,14 +105,14 @@ def mainHelp():
         default=0,
         required=False,
         help=
-        "Distance that define two points being neighbors, eps in cDBSCAN as key parameter. For sharp peak like ChIA-PET data (CTCF), it can be set as 1000,2000. For broad peak like ChIA-PET data, such as H3K27ac/H3K4me1, set it to 2000,5000. For data like HiChIP and Hi-C, set it larger,set several eps like 2000,5000,10000. Default is 0, cLoops can auto estimate a eps for initial result, maybe not good."
+        "Distance that define two points being neighbors, eps in cDBSCAN as key parameter. For sharp peak like ChIA-PET data (CTCF), it can be set as 1000,2000. For broad peak like ChIA-PET data, such as H3K27ac/H3K4me1, set it to 2000,5000. For data like HiChIP and Hi-C, set it larger,set several eps like 5000,7500,10000. Default is 0, cLoops can auto estimate a eps for initial result, maybe not good."
     )
     parser.add_argument(
         "-minPts",
         dest="minPts",
         default=0,
         help=
-        "Points required in a cluster, minPts in cDBSCAN, key parameter. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like >=20. Since v0.9, it can be a seires, and the final loops will have the PETs>= max(minPts)."
+        "Points required in a cluster, minPts in cDBSCAN, key parameter. Empirically 5 is good for TFs and histone modification ChIA-PET data. For data like HiChIP and Hi-C, set it larger, like >=20. Since v0.9, it can be a seires, and the final loops will have the PETs>= max(minPts). For Hi-C data with ~200 million intra-chromosomal PETs, we set it to 20,30,40,50. For cohesin HiChIP data with ~30-40 million intra-chromosomal PETs, we set it to 10,15,20. You can custome it."
     )
     parser.add_argument(
         "-p",
