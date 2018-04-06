@@ -1,11 +1,11 @@
-# cLoops: loops calling for ChIA-PET, HiChIP and Hi-C
+# cLoops: loops calling for ChIA-PET, Hi-C and HiChIP
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
 
 ## Introduction
-Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm called cDBSCAN. The significances of the inter-ligation clusters are then estimated using permutated local background. Both steps are data type independent, and thus enable cLoops to be applicable to even new genome-wide interaction mapping to be developed in the future.
+Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm. The significances of the inter-ligation clusters are then estimated using permutated local background. 
 
 If you find cLoops useful, please give us a star at github and cite our paper:    
-### cLoops: a clustering based loops calling method for ChIA-PET, HiChIP and Hi-C ###
+### cLoops: a clustering based loops calling method for ChIA-PET, Hi-C and HiChIP ###
 
 --------
 ## Install
@@ -28,9 +28,9 @@ Please refer to [here](https://docs.python.org/2/install/index.html) to install 
 
 --------
 ## Usage
-Run ***cLoops -h*** to see all options. Key parameters are ***eps*** and ***minPts*** . ***minPts*** defines at least how many PETs are required for a candidate loop, ***eps*** defines the distance requried for two PETs being neighbors. For ChIA-PET data with sharp peaks, cLoops can auto estimate ***eps*** from the data as 2 fold of the fragment size, and ***minPts***=5 is empirical good. For ChIA-PET data with broad peaks (like H3K4me1), empirical experience is set ***eps*** to 2000,5000. For HiChIP, set a series ***eps***=2000,4000,6000,8000,10000 & ***minPts***=20 worth a first trial, if deeply sequenced, increase ***minPts*** to 30 or 50. For practically usage, using the PETs in the smallest chromosome except chrY and chrM, then run a series of ***eps***, choose the smallest ***eps*** that can get well seperated inter-ligation and self-ligation PETs distance distributions. Or just apply a series of ***eps***,all rounds clustering result will be combined. Actually, there will be more significant loops given more ***eps***, but it will take longer time.
+Run ***cLoops -h*** to see all options. Key parameters are ***eps*** and ***minPts*** . ***minPts*** defines at least how many PETs are required for a candidate loop, ***eps*** defines the distance requried for two PETs being neighbors. For practically usage to tune parameters, using the PETs in the smallest chromosome except chrY and chrM, then run a series of ***eps*** and ***minPts***,all rounds clustering result will be combined to determine your parameters. 
 
-Since version 0.8, cLoops added a new parameter **--mode(-m)**, which is the pre-set parameters for different types of data. -m 0 accepts user settings; -m 1 equals -eps 500,1000,2000 -minPts 5 for sharp peak like ChIA-PET data; -m 2 equals -eps 1000,2000,5000 -minPts 5 for broad peak like ChIA-PET data; -m 3 equals -eps 2000,5000,10000 -minPts 30 -hic 1 for deep sequenced HiChIP and Hi-C data. You can always add more eps to get more candidate loops and maybe more significant loops, however, more eps take longer time.
+Since version 0.8, cLoops added a parameter **--mode(-m)**, which is the pre-set parameters for different types of data. -m 0 accepts user settings; -m 1 equals -eps 500,1000,2000 -minPts 5 for sharp peak like ChIA-PET data; -m 2 equals -eps 1000,2000,5000 -minPts 5 for broad peak like ChIA-PET data; -m 3 equals -eps 5000,7500,10000 -minPts 20,30,40,50 -hic 1 for deep sequenced Hi-C data (~200 million cis PETs); -m 4 equals -eps 2500,5000,7500,10000 -minPts 20,30 -hic 1 for ~100 million cis PETs HiChIP data;for ~30-40 miilion cis PETs HiChIP data, we suggested -eps 2500,5000,7500,10000 -minPts 10,15,20 . You can always add more eps and smaller minPts to get more candidate loops and maybe more significant loops, however, it takes longer time.
 
 --------
 ### Input  

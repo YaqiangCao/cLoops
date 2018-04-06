@@ -95,9 +95,9 @@ def mainHelp():
         required=False,
         type=int,
         default=0,
-        choices=[0, 1, 2, 3],
+        choices=[0, 1, 2, 3, 4],
         help=
-        "Pre-set parameters and signicicance cutoff for different types of data. Default is 0, using values from -eps and -minPts. Set 1 for sharp peak like ChIA-PET data (CTCF,RAD21,eg..),set 2 for broad peak like ChIA-PET data (H3K27ac,H3K4me1 eg..), and set 3 for Hi-C or HiChIP."
+        "Pre-set parameters and signicicance cutoff for different types of data. Default is 0, using values from -eps and -minPts. Set 1 for sharp peak like ChIA-PET data (CTCF,RAD21,eg..),set 2 for broad peak like ChIA-PET data (H3K27ac,H3K4me1 eg..), and set 3 for deep sequenced Hi-C, set 4 for HiChIP."
     )
     parser.add_argument(
         "-eps",

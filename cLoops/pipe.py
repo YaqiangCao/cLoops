@@ -337,6 +337,10 @@ def main():
         eps = [ 5000, 7500, 10000]
         minPts = [50,40,30,20]
         hic = 1
+    if op.mode == 4:
+        eps = [ 2500, 5000, 7500, 10000]
+        minPts = [30,20]
+        hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)
     logger.info(report)
