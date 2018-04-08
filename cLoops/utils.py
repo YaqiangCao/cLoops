@@ -179,7 +179,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "Whether to plot estimated inter-ligation and self-ligation PETs distance distrbution, default is 0."
+        "Whether to plot estimated inter-ligation and self-ligation PETs distance distrbution, default is not."
     )
  
     parser.add_argument(

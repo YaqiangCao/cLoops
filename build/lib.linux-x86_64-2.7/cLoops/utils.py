@@ -138,7 +138,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "Whether to save tracks of loops to visualize in washU. Default is No."
+        "Whether to save tracks of loops to visualize in washU. Default is No, set this flag to save."
     )
     parser.add_argument(
         "-j",
@@ -146,7 +146,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "Whether to convert loops to 2d feature annotations to visualize in Juicebox. Default is No"
+        "Whether to convert loops to 2d feature annotations to visualize in Juicebox. Default is No, set this flag to save."
     )
     parser.add_argument(
         "-s",
@@ -154,7 +154,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "Whether or not to save temp files for each chromosomes during processing. Set 1 for following calling differentially enriched loops or converting PETs to washU track or hic file load into juicebox. Default is not."
+        "Whether or not to save temp files for each chromosomes during processing. Set this flag for following calling differentially enriched loops or converting PETs to washU track or hic file load into juicebox. Default is not."
     )
     parser.add_argument(
         "-hic",
@@ -162,7 +162,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "If input is HiChIP or high resolution Hi-C data, set this to 1, using different significance cutoffs for loops than ChIA-PET data."
+        "If input is HiChIP or high resolution Hi-C data, set this flag, using different significance cutoffs for loops than ChIA-PET data."
     )
     parser.add_argument(
         "-cut",
@@ -179,7 +179,7 @@ def mainHelp():
         required=False,
         action="store_true",
         help=
-        "Whether to plot estimated inter-ligation and self-ligation PETs distance distrbution, default is 0."
+        "Whether to plot estimated inter-ligation and self-ligation PETs distance distrbution, default is not."
     )
  
     parser.add_argument(
