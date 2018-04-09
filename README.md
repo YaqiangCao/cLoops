@@ -11,9 +11,9 @@ If you find cLoops useful, please give us a star at github and cite our paper (*
 ## Install
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
-wget https://github.com/YaqiangCao/cLoops/archive/0.8.tar.gz -O cLoops.tar.gz
-tar xvzf cLoops.tar.gz
-cd cLoops-0.8
+wget https://github.com/YaqiangCao/cLoops/archive/0.9.tar.gz
+tar xvzf 0.9.tar.gz
+cd cLoops-0.9
 python setup.py install    
 ```
 
@@ -68,7 +68,7 @@ All following examples source data, result and log file can be found in the [exa
 We provide a test data from GM12878 CTCF ChIA-PET ([GSM1872886](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1872886)), just the chromosome 21 mapped to hg38. Run the command as following then you will get the result if cLoops is successfuly installed. The ***eps*** is auto estimated and default ***minPts*** is 5,**-w** option will generate loops for visualization in [washU browser](http://epigenomegateway.wustl.edu/browser/),**-j** option will generate loops for visualization in [Juicebox](https://github.com/theaidenlab/juicebox) .
 ```
 wget https://github.com/YaqiangCao/cLoops/blob/master/examples/GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz
-cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w 1 -j 1
+cLoops -f GSM1872886_GM12878_CTCF_ChIA-PET_chr21_hg38.bedpe.gz -o chiapet -w -j
 ```      
 For ChIA-PET data with sharp peak, like the CTCF here, you will get the inter-ligation and self-ligation PETs distance distribution like following, the two kinds of PETs well seperated using auto estimated ***eps***:
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/chiapet_disCutoff.png)
@@ -88,7 +88,7 @@ We provide test data of GM12878 cohesin HiChIP two biological replicates, just t
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz 
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
-cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 50 -s 1 -hic 1 -w 1 -j 1
+cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -eps 1000,2000,4000,6000,8000,10000 -minPts 50 -s -hic -w -j 
 ```    
 Then use jd2juice to convert cLoops temp files to hic file for juicebox:
 ```
@@ -102,12 +102,12 @@ With the adjustment of resolution, color range and how to show the loops, then y
 We provide test data from GM12878 Hi-C, just the chromosome 21 mapped to hg38. Run the the command as following to call loops.
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz 
-cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -eps 2000,4000,6000,8000,10000 -minPts 30 -s 1 -hic 1
+cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w -j -eps 2000,4000,6000,8000,10000 -minPts 30 -s -hic 
 ```   
-or just run following for version >= 0.8:
+or just run following for version >= 0.9:
 
 ```
-cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w 1 -j 1 -s 1 -m 3
+cLoops -f GSM1551552_GM12878_HiC_chr21_hg38.bedpe.gz -o hic -w -j -s -m 3
 ```   
 
 ### 4. Fingerprint plot for data qualities comparasion of loops calling 
