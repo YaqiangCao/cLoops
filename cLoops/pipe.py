@@ -230,55 +230,46 @@ def pipe(fs,
     else:
         cfs = parseRawBedpe2(fs, fout, chroms, cut, logger)
     cfs = Parallel(n_jobs=cpu)(delayed(txt2jd)(f) for f in cfs)
-    #3. run the DBSCAN only one time
+    #3. run the DBSCAN 
     if eps == 0:
         frags = estFragSize(ds)
-        eps = frags * 2
-        dataI, dataS, dis, dss = runDBSCAN(cfs, eps, minPts, cut, cpu)
-        #4.estimate cutoff of self-ligation and inter-ligation
-        cut, frags = estIntSelCutFrag(np.array(dis), np.array(dss))
-        if plot:
-            plotIntSelCutFrag(dis, dss, cut, frags, prefix=fout + "_disCutoff")
-        logger.info(
-            "Estimated inter-ligation and self-ligation distance cutoff as %s"
-            % cut)
-    else:
-        #3.1. run DBSCAN for multiple times
-        dataI = {}
-        dis, dss = [], []
-        cuts = [
-            cut,
-        ]
-        #multiple eps 
-        for ep in eps:
-            #multiple minPts, for minPts like 50,40,30,20, the bigger minPts always get smaller distance cutoff
-            for m in minPts:
-                dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, m, cut,
-                                                           cpu)
-                if len(dataI_2) == 0:
-                    logger.info(
-                        "ERROR: no inter-ligation PETs detected for eps %s minPts %s,can't model the distance cutoff,continue anyway"
-                        %(ep,m))
-                    continue
-                cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
-                if plot:
-                    plotIntSelCutFrag(
-                        dis_2,
-                        dss_2,
-                        cut_2,
-                        frags,
-                        prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep,m))
+        eps = [frags * 2]
+    #3.1. run DBSCAN for multiple times
+    dataI = {}
+    dis, dss = [], []
+    cuts = [
+        cut,
+    ]
+    #multiple eps 
+    for ep in eps:
+        #multiple minPts, for minPts like 50,40,30,20, the bigger minPts always get smaller distance cutoff
+        for m in minPts:
+            dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, m, cut,
+                                                       cpu)
+            if len(dataI_2) == 0:
                 logger.info(
-                    "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s,minPts=%s"
-                    % (cut_2, ep,m))
-                #experimental
-                cuts.append(cut_2)
-                #cut = max(cuts) 
-                cut = cut_2
-                dataI = combineTwice(dataI, dataI_2)
-        cuts = [ c for c in cuts if c>0]
-        cut = np.min(cuts)
-        #cut = np.max(cuts)
+                    "ERROR: no inter-ligation PETs detected for eps %s minPts %s,can't model the distance cutoff,continue anyway"
+                    %(ep,m))
+                continue
+            cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
+            if plot:
+                plotIntSelCutFrag(
+                    dis_2,
+                    dss_2,
+                    cut_2,
+                    frags,
+                    prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep,m))
+            logger.info(
+                "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s,minPts=%s"
+                % (cut_2, ep,m))
+            #experimental
+            cuts.append(cut_2)
+            #cut = max(cuts) 
+            cut = cut_2
+            dataI = combineTwice(dataI, dataI_2)
+    cuts = [ c for c in cuts if c>0]
+    cut = np.min(cuts)
+    #cut = np.max(cuts)
     #5.estimate the significance
     e = runStat(dataI, minPts, cut, cpu, fout, hic)
     if e:
