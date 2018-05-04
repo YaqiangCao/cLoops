@@ -335,7 +335,7 @@ def jd2hic(fs, fout, cut, org):
     with open(tmp, "w") as f:
         for fin in fs:
             print "converting %s" % fin
-            key, mat = parseJd(fin)
+            key, mat = parseJd(fin,cut)
             for t in mat:
                 line = [0, key[0], t[1], 0, 1, key[1], t[2], 1]
                 f.write("\t".join(map(str, line)) + "\n")
