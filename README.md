@@ -132,9 +132,9 @@ cLoops -f GSE101498_K562_HiChIP_H3K27ac_rep1.bedpe.gz,GSE101498_K562_HiChIP_H3K2
 #call stripes
 callStripes -d K562_HiChIP_H3K27ac_chr21 -o K562_HiChIP_H3K27ac_chr21 -c chr21 -j
 ```
-After above command, you will get two files (with suffix juicebox.txt ) that could be loaded in Juicebox as 2D annotation as following example:
+After above command, you will get two files (with suffix juicebox.txt,[K562_HiChIP_H3K27ac_chr21_x_horizontal_juicebox.txt](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_x_horizontal_juicebox.txt) and [K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt) that could be used for furthur analysis and loaded in Juicebox as 2D annotation as following example:
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/K562_H3K27ac_HiChIP_stripes.png)
-Two extra files with file type as .stripe is similar to that of .loop file.
+Two extra files with file type as .stripe ([K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe) and [K562_HiChIP_H3K27ac_chr21_y_vertical.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt)) is similar to that of .loop file.
 Please note, it's a initial experimental function added in v0.91, not well tested for all data. We'll make improvements when the deep-sequenced Hi-C data is available.
 
 --------
