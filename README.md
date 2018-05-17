@@ -131,6 +131,9 @@ wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples
 cLoops -f GSE101498_K562_HiChIP_H3K27ac_rep1.bedpe.gz,GSE101498_K562_HiChIP_H3K27ac_rep2.bedpe.gz,GSE101498_K562_HiChIP_H3K27ac_rep3.bedpe.gz -o K562_HiChIP_H3K27ac_chr21 -minPts 20,30 -eps 2500,5000,7500,10000 -hic -s -j -c chr21
 #call stripes
 callStripes -d K562_HiChIP_H3K27ac_chr21 -o K562_HiChIP_H3K27ac_chr21 -c chr21 -j
+#for visualization in juicebox
+jd2juice -d K562_HiChIP_H3K27ac_chr21/ -o K562_HiChIP_H3K27ac_chr21 -org hg38
+
 ```
 After above command, you will get two files (with suffix juicebox.txt,[K562_HiChIP_H3K27ac_chr21_x_horizontal_juicebox.txt](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_x_horizontal_juicebox.txt) and [K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt) that could be used for furthur analysis and loaded in Juicebox as 2D annotation as following example:
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/K562_H3K27ac_HiChIP_stripes.png)
