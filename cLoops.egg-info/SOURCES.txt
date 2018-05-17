@@ -15,6 +15,7 @@ cLoops.egg-info/SOURCES.txt
 cLoops.egg-info/dependency_links.txt
 cLoops.egg-info/entry_points.txt
 cLoops.egg-info/top_level.txt
+scripts/callStripes
 scripts/deLoops
 scripts/jd2fingerprint
 scripts/jd2juice

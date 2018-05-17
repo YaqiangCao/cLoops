@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='cLoops',
-    version='0.9',
+    version='0.91',
     author='Yaqiang Cao',
     author_email='caoyaqiang@picb.ac.cn',
     url='https://github.com/YaqiangCao/cLoops',
@@ -25,6 +25,6 @@ setup(name='cLoops',
         },
     #scripts = ["scripts/deLoops","scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
     #temply disable deLoops for furthur development
-    scripts = ["scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
+    scripts = ["scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint","scripts/callStripes"],
 
     )

@@ -122,8 +122,20 @@ jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 
 ### 5. call stripes
 Since v0.91 (2018-05-17 release), we introduce a new script callStripe, which can identify stripes (a structure defined in ***The Energetics and Physiological Impact of Cohesin Extrusion*** ). However, the original paper hasn't released their data, so we demonstrate the the result using H3K27ac HiChIP data in K562, which from the heatmap we can observe a lot of similar stripes.
-We provided the H3K27ac HiChIP data in K562 chr21 for testing. Parameters tuning maybe needed for other data, please concate caoyaqiang0410@gmail.com for tuning parameters. 
-
+We provided the H3K27ac HiChIP data in K562 chr21 for testing. Parameters tuning maybe needed for other data, please email caoyaqiang0410@gmail.com for tuning parameters for your data. 
+```
+wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE101498_K562_HiChIP_H3K27ac_rep1.bedpe.gz
+wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE101498_K562_HiChIP_H3K27ac_rep2.bedpe.gz
+wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE101498_K562_HiChIP_H3K27ac_rep3.bedpe.gz
+#first call loops to save the middle files, you can kill cLoops once the .jd files are generated
+cLoops -f GSE101498_K562_HiChIP_H3K27ac_rep1.bedpe.gz,GSE101498_K562_HiChIP_H3K27ac_rep2.bedpe.gz,GSE101498_K562_HiChIP_H3K27ac_rep3.bedpe.gz -o K562_HiChIP_H3K27ac_chr21 -minPts 20,30 -eps 2500,5000,7500,10000 -hic -s -j -c chr21
+#call stripes
+callStripes -d K562_HiChIP_H3K27ac_chr21 -o K562_HiChIP_H3K27ac_chr21 -c chr21 -j
+```
+After above command, you will get two files (with suffix juicebox.txt ) that could be loaded in Juicebox as 2D annotation as following example:
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/K562_H3K27ac_HiChIP_stripes.png)
+Two extra files with file type as .stripe is similar to that of .loop file.
+Please note, it's a initial experimental function added in v0.91, not well tested for all data.
 
 --------
 ## Other data  

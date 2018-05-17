@@ -92,7 +92,7 @@ def getFingerPrint(dirs, labels, fout, binSize=2000, cpu=10, plot=1, bins=100):
             binSize=binSize,
             cpu=cpu,
             bins=bins)
-        if labels !="" and labels[i] != "":
+        if labels != "" and labels[i] != "":
             data[labels[i]] = s
         else:
             data[nlabel] = s
