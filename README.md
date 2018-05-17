@@ -51,7 +51,7 @@ column | name | explaination
 3th | binomal\_p-value | binomal test p-value for the loop
 4th | distance | distance (bp) between the centers of the anchors for the loop
 5th | hypergeometric\_p-value | hypergeometric test p-value for the loop
-6th i| iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
+6th | iva | genomic coordinates for the left anchor, for example, chr13:50943050-50973634
 7th | ivb | genomic coordinates for the right anchor
 8th | poisson_p-value | poisson test p-value for the loop
 9th | ra | observed PETs number for the left anchor
