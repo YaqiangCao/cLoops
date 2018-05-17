@@ -7,6 +7,8 @@ Chromosome conformation capture (3C) derived high-throughput sequencing methods 
 If you find cLoops useful, please give us a star at github and cite our paper (***in preparation***):    
 ### cLoops: a clustering based loops calling method for ChIA-PET, Hi-C and HiChIP ###
 
+You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCao/cLoops/wiki)
+
 --------
 ## Install
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
@@ -116,6 +118,11 @@ Run following and you will get [a PDF plot](https://github.com/YaqiangCao/cLoops
 jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 ```
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/FingerprintPlot.png)
+
+
+### 5. call stripes
+Since v0.91 (2018-05-17 release), we introduce a new script callStripe, which can identify stripes (a structure defined in ***The Energetics and Physiological Impact of Cohesin Extrusion*** ). However, the original paper hasn't released their data, so we demonstrate the the result using H3K27ac HiChIP data in K562, which from the heatmap we can observe a lot of similar stripes.
+We provided the H3K27ac HiChIP data in K562 chr21 for testing. Parameters tuning maybe needed for other data, please concate caoyaqiang0410@gmail.com for tuning parameters. 
 
 
 --------
