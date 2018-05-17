@@ -121,7 +121,7 @@ jd2fingerprint -d chiapet,hichip,hic -plot 1 -o compare -bs 2000
 
 
 ### 5. call stripes
-Since v0.91 (2018-05-17 release), we introduce a new script callStripe, which can identify stripes (a structure defined in ***The Energetics and Physiological Impact of Cohesin Extrusion*** ). However, the original paper hasn't released their data, so we demonstrate the the result using H3K27ac HiChIP data in K562, which from the heatmap we can observe a lot of similar stripes.
+Since v0.91 (2018-05-17 release), we introduce a new script callStripe, which can identify stripes (a structure defined in [***The Energetics and Physiological Impact of Cohesin Extrusion***](https://www.cell.com/cell/abstract/S0092-8674(18)30404-5)). However, the original paper hasn't released their data, so we demonstrate the the result using H3K27ac HiChIP data in K562, which from the heatmap we can observe a lot of similar stripes.
 We provided the H3K27ac HiChIP data in K562 chr21 for testing. Parameters tuning maybe needed for other data, please email caoyaqiang0410@gmail.com for tuning parameters for your data. 
 ```
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE101498_K562_HiChIP_H3K27ac_rep1.bedpe.gz
