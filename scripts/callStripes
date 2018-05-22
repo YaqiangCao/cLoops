@@ -322,9 +322,10 @@ def callStripes(jddir,
     records = {}
     for f in glob(os.path.join(jddir, "*.jd")):
         c = tuple(os.path.splitext(os.path.split(f)[-1])[0].split("-"))
-        if not (c[0] in chroms and c[1] in chroms):
-            continue
-        records[c] = {"f": f}
+        if chroms == ['']:
+            records[c] = {"f": f}
+        if chroms != [''] and c[0] in chroms and c[1] in chroms:
+            records[c] = {"f": f}
     #2. run parallelly variant of cDBSCAN to find candidate stripes
     #2.1 x, horizontal stripes
     ds_x = Parallel(n_jobs=cpus)(delayed(singleStripDBSCAN)(
@@ -455,7 +456,7 @@ if __name__ == "__main__":
     logger = getLogger(fn)
     op = callStripesHelp()
     report = "Command line: callStripes -d {} -o {} -eps {} -minPts {} -pets {} -ext {} -c {} -p {} -j {}".format(
-        op.d, op.output, op.eps, op.minPts, op.pets, op.ext, op.chroms, op.cpu,
+        op.d, op.output, op.eps, op.minPts, op.pets, op.ext, op.chroms.split(","), op.cpu,
         op.juice)
     logger.info(report)
     callStripes(
