@@ -53,6 +53,7 @@ def estIntSelCutFrag(di, ds, log=1):
     cut1 = np.median(ds) + 3 * ds.std()
     cut2 = (ds.mean() * ds.std() + di.mean() * di.std()) / (
         ds.std() + di.std())
+    #cut2 can be changed to cut2 = di.mean()/(di.std()**2) - ds.mean()/(ds.std()**2) to better get the intersection point of the distribution as di > ds, according to https://stackoverflow.com/questions/22579434/python-finding-the-intersection-point-of-two-gaussian-curves
     cut = min([cut1, cut2])
     rcut = int(2**cut)
     #fragment size
