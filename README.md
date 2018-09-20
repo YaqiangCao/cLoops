@@ -11,7 +11,7 @@ You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCa
 
 --------
 ## Install
-[scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. **Joblib version 0.11 is requried to avoid parallel computating bugs caused by it for newer version. Install it through pip2.7 install --user joblib==0.11. ** If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
+[scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. **Joblib version 0.11 is requried to avoid parallel computating bugs caused by it for newer version. Install it through pip2.7 install --user joblib==0.11.** If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
 wget https://github.com/YaqiangCao/cLoops/archive/0.9.tar.gz
 tar xvzf 0.9.tar.gz
