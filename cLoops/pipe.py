@@ -252,7 +252,6 @@ def pipe(fs,
                     "ERROR: no inter-ligation PETs detected for eps %s minPts %s,can't model the distance cutoff,continue anyway"
                     %(ep,m))
                 continue
-            print(len(dss_2))
             if len(dis_2) == 0 or len(dss_2) == 0:
                 dataI = combineTwice(dataI, dataI_2)
             else:
