@@ -4,6 +4,7 @@
 2017-07-20: loops2juicebox added
 2017-08-02: re-design the datastructure
 2018-03-05: modified loops2juice
+2018-09-21: modified loops2washU to avoid "inf"
 """
 
 __author__ = "CAO Yaqiang"
@@ -231,6 +232,8 @@ def loops2washU(fin, fout, logger, significant=1):
             if significant and float(line[-1]) < 1:
                 continue
             #iva,ivb,ES
+            if str(line[1]) == "inf":
+                line[1] = 100
             nline = [line[6], line[7], line[1]]
             f.write("\t".join(map(str, nline)) + "\n")
     logger.info(
