@@ -174,6 +174,15 @@ def mainHelp():
         "Initial distance cutoff to filter PETs, default is 0, only used for debuging."
     )
     parser.add_argument(
+        "-max_cut",
+        dest="max_cut",
+        required=False,
+        action="store_true",
+        help=
+        "When running cLoops with multiple eps or minPts, multiple distance cutoffs for self-ligation and inter-ligation will be esimated, defulat is the minimal one, set this flag to use maxmial one."
+    )
+
+    parser.add_argument(
         "-plot",
         dest="plot",
         required=False,

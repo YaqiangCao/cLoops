@@ -244,7 +244,7 @@ def removeDup(ds, bpcut=1e-5):
             #first select the significant loops, then select the loops with smaller anchors and higher density
             ts[t] = float(ds[t]["rab"]) / ds[t]["ra"] / ds[t]["rb"]
         """
-        Used for debugging
+        #Used for debugging
             iva = parseIv(ds[t]["iva"])
             ivb = parseIv(ds[t]["ivb"])
             a = iva[2]-iva[1]+ivb[2]-ivb[1]

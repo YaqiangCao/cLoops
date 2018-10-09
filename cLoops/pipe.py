@@ -18,8 +18,8 @@ pipe.py
 2018-03-30: multiple minPts mode added
 2018-03-31: modified self-ligation and inter-ligation distance cutoff selection.
 2018-09-26: updated estimated distance cutoff to avoid 0 size self-ligated PETs
-"""
-
+2018-10-09: updated usage for self-ligation and inter-ligation distance cutoff.
+""" 
 __author__ = "CAO Yaqiang"
 __date__ = ""
 __modified__ = ""
@@ -112,8 +112,8 @@ def runDBSCAN(fs, eps, minPts, cut=0, cpu=1):
     """
     Run DBSCAN to detect interactions for all chromosomes.
     """
-    ds = Parallel(n_jobs=cpu)(delayed(singleDBSCAN)(f, eps, minPts, cut)
-                              for f in fs)
+    ds = Parallel(n_jobs=cpu)(
+        delayed(singleDBSCAN)(f, eps, minPts, cut) for f in fs)
     dataI, dataS, dis, dss = {}, [], [], []
     for d in ds:
         if len(d[2]) == 0:
@@ -161,14 +161,14 @@ def combineTwice(dataI, dataI_2):
                 "records": dataI_2[key]["records"]
             }
         else:
-            for ra in dataI_2[key]["records"]:
-                flag = 1
-                for rb in dataI[key]["records"]:
-                    if checkSameLoop(ra, rb):
-                        flag = 0
-                        break
-                if flag:
-                    dataI[key]["records"].append(ra)
+            ds = set()
+            for r in dataI[key]["records"]:
+                t = [r[1],r[2],r[4],r[5]]
+                ds.add(tuple(t))
+            for r in dataI_2[key]["records"]:
+                t = tuple([r[1],r[2],r[4],r[5]])
+                if t not in ds:
+                    dataI[key]["records"].append(r)
     return dataI
 
 
@@ -179,9 +179,9 @@ def runStat(dataI, minPts, cut, cpu, fout, hichip=0):
     logger.info(
         "Starting estimate significance for interactions using distance cutoff as %s"
         % cut)
-    ds = Parallel(n_jobs=cpu)(delayed(getIntSig)(
-        dataI[key]["f"], dataI[key]["records"], minPts, cut)
-                              for key in dataI.keys())
+    ds = Parallel(n_jobs=cpu)(
+        delayed(getIntSig)(dataI[key]["f"], dataI[key]["records"], minPts, cut)
+        for key in dataI.keys())
     ds = [d for d in ds if d is not None]
     if len(ds) == 0:
         logger.error("Something wrong, no loops found, sorry, bye.")
@@ -213,7 +213,7 @@ def pipe(fs,
          juice=0,
          cut=0,
          plot=0,
-         ):
+         max_cut=False):
     if chroms == "":
         chroms = []
     else:
@@ -231,7 +231,7 @@ def pipe(fs,
     else:
         cfs = parseRawBedpe2(fs, fout, chroms, cut, logger)
     cfs = Parallel(n_jobs=cpu)(delayed(txt2jd)(f) for f in cfs)
-    #3. run the DBSCAN 
+    #3. run the DBSCAN
     if eps == 0:
         frags = estFragSize(ds)
         eps = [frags * 2]
@@ -241,39 +241,41 @@ def pipe(fs,
     cuts = [
         cut,
     ]
-    #multiple eps 
+    #multiple eps
     for ep in eps:
         #multiple minPts, for minPts like 50,40,30,20, the bigger minPts always get smaller distance cutoff
         for m in minPts:
-            dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, m, cut,
-                                                       cpu)
+            dataI_2, dataS_2, dis_2, dss_2 = runDBSCAN(cfs, ep, m, cut, cpu)
             if len(dataI_2) == 0:
                 logger.info(
                     "ERROR: no inter-ligation PETs detected for eps %s minPts %s,can't model the distance cutoff,continue anyway"
-                    %(ep,m))
+                    % (ep, m))
                 continue
             if len(dis_2) == 0 or len(dss_2) == 0:
                 dataI = combineTwice(dataI, dataI_2)
             else:
-                cut_2, frags = estIntSelCutFrag(np.array(dis_2), np.array(dss_2))
+                cut_2, frags = estIntSelCutFrag(
+                    np.array(dis_2), np.array(dss_2))
                 if plot:
                     plotIntSelCutFrag(
                         dis_2,
                         dss_2,
                         cut_2,
                         frags,
-                        prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep,m))
+                        prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep, m))
                 logger.info(
                     "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s,minPts=%s"
-                    % (cut_2, ep,m))
+                    % (cut_2, ep, m))
                 #experimental
                 cuts.append(cut_2)
-                #cut = max(cuts) 
+                #cut = max(cuts)
                 cut = cut_2
                 dataI = combineTwice(dataI, dataI_2)
-    cuts = [ c for c in cuts if c>0]
-    cut = np.min(cuts)
-    #cut = np.max(cuts)
+    cuts = [c for c in cuts if c > 0]
+    if max_cut:
+        cut = np.max(cuts)
+    else:
+        cut = np.min(cuts)
     #5.estimate the significance
     e = runStat(dataI, minPts, cut, cpu, fout, hic)
     if e:
@@ -295,9 +297,9 @@ def main():
     fn = os.path.join(os.getcwd(), "cLoops.log")
     logger = getLogger(fn)
     op = mainHelp()
-    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {} -plot {}".format(
+    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {} -plot {} -max_cut".format(
         op.fnIn, op.fnOut, op.mode, op.eps, op.minPts, op.cpu, op.washU,
-        op.juice, op.tmp, op.chroms, op.hic, op.cut,op.plot)
+        op.juice, op.tmp, op.chroms, op.hic, op.cut, op.plot, op.max_cut)
     logger.info(report)
     if op.mode == 0:
         #parse eps
@@ -329,19 +331,19 @@ def main():
         minPts = [5]
         hic = 0
     if op.mode == 3:
-        eps = [ 5000, 7500, 10000]
-        minPts = [50,40,30,20]
+        eps = [5000, 7500, 10000]
+        minPts = [50, 40, 30, 20]
         hic = 1
     if op.mode == 4:
-        eps = [ 2500, 5000, 7500, 10000]
-        minPts = [30,20]
+        eps = [2500, 5000, 7500, 10000]
+        minPts = [30, 20]
         hic = 1
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)
     logger.info(report)
     pipe(
         op.fnIn.split(","), op.fnOut, eps, minPts, op.chroms, op.cpu, op.tmp,
-        hic, op.washU, op.juice, op.cut,op.plot)
+        hic, op.washU, op.juice, op.cut, op.plot, op.max_cut)
     usedtime = datetime.now() - start
     r = "cLoops finished. Used CPU time: %s Bye!\n\n\n" % usedtime
     logger.info(r)

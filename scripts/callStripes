@@ -19,13 +19,13 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
+from scipy.stats import hypergeom, binom, poisson, combine_pvalues
 
 #cLoops
 from cLoops.settings import *
 from cLoops.utils import getLogger, callSys, cFlush, mainHelp
 from cLoops.io import parseRawBedpe, parseRawBedpe2, txt2jd, parseJd, parseIv, loops2washU, loops2juice
 from cLoops.cDBSCAN import cDBSCAN as DBSCAN
-from scipy.stats import hypergeom, binom, poisson, combine_pvalues
 from cLoops.cModel import getGenomeCoverage, getPETsforRegions, getCounts, removeDup
 
 #global settings
