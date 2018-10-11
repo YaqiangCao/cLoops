@@ -297,7 +297,7 @@ def main():
     fn = os.path.join(os.getcwd(), "cLoops.log")
     logger = getLogger(fn)
     op = mainHelp()
-    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {} -plot {} -max_cut".format(
+    report = "Command line: cLoops -f {} -o {} -m {} -eps {} -minPts {} -p {} -w {} -j {} -s {} -c {} -hic {} -cut {} -plot {} -max_cut {}".format(
         op.fnIn, op.fnOut, op.mode, op.eps, op.minPts, op.cpu, op.washU,
         op.juice, op.tmp, op.chroms, op.hic, op.cut, op.plot, op.max_cut)
     logger.info(report)
