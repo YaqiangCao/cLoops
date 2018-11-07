@@ -140,6 +140,9 @@ After above command, you will get two files (with suffix juicebox.txt,[K562_HiCh
 Two extra files with file type as .stripe ([K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe) and [K562_HiChIP_H3K27ac_chr21_y_vertical.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt)) is similar to that of .loop file.
 Please note, it's a initial experimental function added in v0.91, not well tested for all data. We'll make improvements when the deep-sequenced Hi-C data is available.
 
+### 5. Trac-looping data 
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/Trac-looping.svg)
+
 --------
 ## Other data  
 In theory cLoops could be applied to more 3D genomic data as long as there are enriched clusters in the heatmap, however, parameters and significance cutoffs should be tuned. We're now trying to make cLoops work for [GRID-seq](https://www.nature.com/articles/nbt.3968) and [Capture HiC](https://www.nature.com/articles/ng.3286). If you have designed a new sequencing based 3D genomic method and want to try cLoops, please contact caoyaqiang0410@gmail.com first.
