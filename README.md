@@ -141,7 +141,7 @@ Two extra files with file type as .stripe ([K562_HiChIP_H3K27ac_chr21_x_horizont
 Please note, it's a initial experimental function added in v0.91, not well tested for all data. We'll make improvements when the deep-sequenced Hi-C data is available.
 
 ### 6. Trac-looping data 
-We provide test data of [Trac-looping data](https://www.nature.com/articles/s41592-018-0107-y) from resting CD4+ cell, just the chromosome 21 mapped to hg19 obtained from [GEO:GSE87254](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE87254). Run the the command as following to call loops. This new datasets also show the cLoops is applied to new developed 3D mapping data.The option "-max_cut" is a new option in v0.92 to select more distant loops from the distance cutoffs determined from multiple ***eps*** and ***minPts*** combinations. 
+We provide test data of [Trac-looping data](https://www.nature.com/articles/s41592-018-0107-y) from resting CD4+ cell, just the chromosome 21 mapped to hg19 obtained from [GEO:GSE87254](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE87254). Run the the command as following to call loops. This new datasets also show cLoops is applied to new developed 3D mapping data.The option "-max_cut" is a new option in v0.92 to select more distant loops from the distance cutoffs determined from multiple ***eps*** and ***minPts*** combinations. 
 ```
 #download data from our site
 wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2326178_CD4_Resting_Trac-looping_rep1-tech1_chr21_hg19.bedpe.gz
