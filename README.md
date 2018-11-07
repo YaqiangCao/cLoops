@@ -141,7 +141,7 @@ Two extra files with file type as .stripe ([K562_HiChIP_H3K27ac_chr21_x_horizont
 Please note, it's a initial experimental function added in v0.91, not well tested for all data. We'll make improvements when the deep-sequenced Hi-C data is available.
 
 ### 5. Trac-looping data 
-![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/Trac-looping.svg)
+![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/Trac-looping.png)
 
 --------
 ## Other data  
