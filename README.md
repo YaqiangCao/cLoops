@@ -140,8 +140,22 @@ After above command, you will get two files (with suffix juicebox.txt,[K562_HiCh
 Two extra files with file type as .stripe ([K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_x_horizontal.stripe) and [K562_HiChIP_H3K27ac_chr21_y_vertical.stripe](https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/K562_HiChIP_H3K27ac_chr21_y_vertical_juicebox.txt)) is similar to that of .loop file.
 Please note, it's a initial experimental function added in v0.91, not well tested for all data. We'll make improvements when the deep-sequenced Hi-C data is available.
 
-### 5. Trac-looping data 
-![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/Trac-looping.png)
+### 6. Trac-looping data 
+We provide test data of [Trac-looping data](https://www.nature.com/articles/s41592-018-0107-y) from resting CD4+ cell, just the chromosome 21 mapped to hg19 obtained from [GEO:GSE87254](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE87254). Run the the command as following to call loops. This new datasets also show the cLoops is applied to new developed 3D mapping data.The option "-max_cut" is a new option in v0.92 to select more distant loops from the distance cutoffs determined from multiple ***eps*** and ***minPts*** combinations. 
+```
+#download data from our site
+wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2326178_CD4_Resting_Trac-looping_rep1-tech1_chr21_hg19.bedpe.gz
+wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2326179_CD4_Resting_Trac-looping_rep2_chr21_hg19.bedpe.gz
+wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2326180_CD4_Resting_Trac-looping_rep1-tech2_chr21_hg19.bedpe.gz 
+wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2782295_CD4_Resting_Trac-looping_rep3_chr21_hg19.bedpe.gz 
+wget -c https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSM2782296_CD4_Resting_Trac-looping_rep4_chr21_hg19.bedpe.gz 
+#run cLoops, -cut 2000 was used to remove close PETs before calling loops
+cLoops -f GSM2326178_CD4_Resting_Trac-looping_rep1-tech1_chr21_hg19.bedpe.gz,GSM2326179_CD4_Resting_Trac-looping_rep2_chr21_hg19.bedpe.gz,GSM2326180_CD4_Resting_Trac-looping_rep1-tech2_chr21_hg19.bedpe.gz,GSM2782295_CD4_Resting_Trac-looping_rep3_chr21_hg19.bedpe.gz,GSM2782296_CD4_Resting_Trac-looping_rep4_chr21_hg19.bedpe.gz -o Trac-looping_chr21 -eps 500,1000,2000,5000 -minPts 5 -p 1 -w -j -cut 2000 -s -c chr21 -max_cut
+#conver cLoops tmp files to washU interaction tracks for visualizaiton
+jd2washU -d Trac-looping_chr21 -o Trac-looping_chr21 
+```
+By uploading the interaction tracks and cLoops called loops (with suffix of _loops_washU.txt ) to washU, you can visualize the result for example as following. Meanwhile, cLoops called loops are more distant than their original called loops. We're keeping imroving cLoops.
+![](https://github.com/YaqiangCao/cLoops/blob/master/pngs/Trac-looping.png)
 
 --------
 ## Other data  
