@@ -154,7 +154,7 @@ cLoops -f GSM2326178_CD4_Resting_Trac-looping_rep1-tech1_chr21_hg19.bedpe.gz,GSM
 #conver cLoops tmp files to washU interaction tracks for visualizaiton
 jd2washU -d Trac-looping_chr21 -o Trac-looping_chr21 
 ```
-By uploading the interaction tracks and cLoops called loops (with suffix of _loops_washU.txt ) to washU, you can visualize the result for example as following. Meanwhile, cLoops called loops are more distant than their original called loops. We're keeping imroving cLoops.
+By uploading the interaction tracks and cLoops called loops (with suffix of _loops_washU.txt ) to washU, you can visualize the result for example as following. Meanwhile, cLoops called loops are more distant than their original called loops. We're keeping improving cLoops.
 ![](https://github.com/YaqiangCao/cLoops/blob/master/pngs/Trac-looping.png)
 
 --------
