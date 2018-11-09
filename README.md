@@ -5,7 +5,7 @@
 Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm. The significances of the inter-ligation clusters are then estimated using permutated local background. 
 
 If you find cLoops useful, please give us a star at github and cite our paper (***in preparation***):   
-####  Yaqiang Cao, Xingwei Chen, Daosheng Ai, Zhaoxiong Chen, Guoyu Chen, Joseph McDermott, Yi Huang, Jing-Dong J. Han (2018) "Accurate loop calling for 3D genomic data with cLoops" bioRxiv 465849; doi: https://doi.org/10.1101/465849 ####
+***Yaqiang Cao, Xingwei Chen, Daosheng Ai, Zhaoxiong Chen, Guoyu Chen, Joseph McDermott, Yi Huang, Jing-Dong J. Han (2018) "Accurate loop calling for 3D genomic data with cLoops" bioRxiv 465849; doi: https://doi.org/10.1101/465849***
 
 You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCao/cLoops/wiki)
 
