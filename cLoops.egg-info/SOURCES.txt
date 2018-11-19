@@ -18,6 +18,7 @@ cLoops.egg-info/entry_points.txt
 cLoops.egg-info/top_level.txt
 scripts/callStripes
 scripts/deLoops
+scripts/hicpropairs2bedpe
 scripts/jd2fingerprint
 scripts/jd2juice
 scripts/jd2saturation

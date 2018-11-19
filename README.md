@@ -171,6 +171,7 @@ Following are selected questions:
 -------
 1. HiC-Pro to bedpe     
 The [allValidPairs](http://nservant.github.io/HiC-Pro/MANUAL.html#browsing-the-results) can be converted to BEDPE file. You can define a extension size (like half of the reads length) along the reads strand direction. In cLoops' first step, all coordinates are converted from (startA+endA)/2,(startB+endB)/2 to (x,y), so actually the extension size doesn't matter.
+Since v0.92 (2018-11-16 updated), we provide a scirpt named hicpropairs2bedpe to convert HiC-Pro output to cLoops input BEDPE file. Once cLoops installed, hicpropairs2bedpe is available through command line. 
 
 2. inter-chromosomal loops    
 So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version as soon as there's available testing data.

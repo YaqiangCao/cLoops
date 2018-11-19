@@ -4,10 +4,10 @@ from setuptools import setup, find_packages
 
 setup(name='cLoops',
     version='0.92',
-    author='Yaqiang Cao',
-    author_email='caoyaqiang@picb.ac.cn',
+    author=['Yaqiang Cao',"Zhaoxiong Chen"],
+    author_email=['caoyaqiang@picb.ac.cn','chenzhaoxiong@picb.ac.cn'],
     url='https://github.com/YaqiangCao/cLoops',
-    description='Loops calling for ChIA-PET,HiChIP and Hi-C data. Can be applied to similar datasets.',
+    description='Loops calling for ChIA-PET,HiChIP,Hi-C and Trac-looping data. Can be applied to similar datasets.',
     classifiers=[
         'Environment :: Console',
         'Programming Language :: Python :: 2.7',
@@ -25,6 +25,5 @@ setup(name='cLoops',
         },
     #scripts = ["scripts/deLoops","scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint"],
     #temply disable deLoops for furthur development
-    scripts = ["scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint","scripts/callStripes"],
-
+    scripts = ["scripts/jd2juice","scripts/jd2washU","scripts/jd2saturation","scripts/jd2fingerprint","scripts/callStripes","scripts/hicpropairs2bedpe"],
     )

@@ -1,8 +1,9 @@
-#!/usr/bin/python2.7
+#!/home/caoyaqiang/miniconda3/bin/python
 #--coding:utf-8 --
 """
 stripe.py
-2018-05-04
+2018-05-04: finished
+2018-11-16: fix small bugs when no stripes were found
 """
 
 __author__ = "CAO Yaqiang"
@@ -305,6 +306,8 @@ def stripe2juice(fin, fout, significant=1):
             f.write("\t".join(map(str, nline)) + "\n")
 
 
+
+
 def callStripes(jddir,
                 fout,
                 eps=20000,
@@ -345,24 +348,31 @@ def callStripes(jddir,
     ds_x = Parallel(n_jobs=cpus)(delayed(estStripeSig)(records[key]["f"],
                                                        ds_x[key])
                                  for key in ds_x.keys())
-    ds_x = pd.concat(ds_x)
+    ds_x = [x for x in ds_x if x is not None]
     #4.2 estimating the significance for verical stripes
     ds_y = Parallel(n_jobs=cpus)(delayed(estStripeSig)(records[key]["f"],
                                                        ds_y[key])
                                  for key in ds_y.keys())
-    ds_y = pd.concat(ds_y)
-    #5. marking the significant stripes
-    ds_x = markStripeSig(ds_x)
-    ds_y = markStripeSig(ds_y)
-    #6. saveing called stripes
-    ds_x.to_csv(
-        fout + "_x_horizontal.stripe", sep="\t", index_label="stripeId")
-    ds_y.to_csv(fout + "_y_vertical.stripe", sep="\t", index_label="stripeId")
-    #7. convert to juicebox annotation
-    if juice:
-        stripe2juice(fout + "_x_horizontal.stripe",
+    ds_y = [y for y in ds_y if y is not None]
+    if len(ds_x) > 0:
+        ds_x = pd.concat(ds_x)
+        #5. marking the significant stripes
+        ds_x = markStripeSig(ds_x)
+        #6. saveing called stripes
+        ds_x.to_csv( fout + "_x_horizontal.stripe", sep="\t", index_label="stripeId")
+        #7. convert to juicebox annotation
+        if juice:
+            stripe2juice(fout + "_x_horizontal.stripe",
                      fout + "_x_horizontal_juicebox.txt", 1)
-        stripe2juice(fout + "_y_vertical.stripe",
+    if len(ds_y) > 0:
+        ds_y = pd.concat(ds_y)
+        #5. marking the significant stripes
+        ds_y = markStripeSig(ds_y)
+        #6. saveing called stripes
+        ds_y.to_csv( fout + "_y_vertical.stripe", sep="\t", index_label="stripeId")
+        #7. convert to juicebox annotation
+        if juice:
+            stripe2juice(fout + "_y_vertical.stripe",
                      fout + "_y_vertical_juicebox.txt", 1)
 
 
