@@ -92,7 +92,7 @@ def mainHelp():
     parser.add_argument(
         "-m",
         dest="mode",
-        required=True,
+        required=False,
         type=int,
         default=0,
         choices=[0, 1, 2, 3, 4],
