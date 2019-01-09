@@ -5,6 +5,7 @@
 2017-08-02: re-design the datastructure
 2018-03-05: modified loops2juice
 2018-09-21: modified loops2washU to avoid "inf"
+2019-01-04: remove duplicate PETs checking to improve pre-processing speed.
 """
 
 __author__ = "CAO Yaqiang"
@@ -119,7 +120,7 @@ def parseRawBedpe(fs, fout, cs, cut, logger):
             #collect distances of opsite strand PETs
             if pet.strandA != pet.strandB:
                 ds.append(pet.distance)
-    print
+    print()
     del chroms
     r = "Totaly %s PETs from %s, in which %s cis PETs" % (i, ",".join(fs), j)
     logger.info(r)
@@ -165,7 +166,7 @@ def parseRawBedpe2(fs, fout, cs, cut, logger):
             if pet.chromA != pet.chromB:
                 continue
             #filtering unwanted PETs in chroms
-            if len(cs) > 0 and (not (pet.chromA in cs)):
+            if len(cs) > 0 and (not (pet.chromA in cs and pet.chromB in cs)):
                 continue
             #filtering too close PETs
             if cut > 0 and pet.distance < cut:
@@ -179,7 +180,7 @@ def parseRawBedpe2(fs, fout, cs, cut, logger):
             chroms[pet.chromA]["f"].write("\t".join(map(str, nline)) + "\n")
             chroms[pet.chromA]["c"] += 1
             j += 1
-    print
+    print()
     del chroms
     r = "Totaly %s PETs from %s, in which %s cis PETs" % (i, ",".join(fs), j)
     logger.info(r)

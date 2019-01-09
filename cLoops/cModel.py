@@ -8,13 +8,14 @@ Stastical significance is tested for every chromosome using the local permutated
 2018-03-23: modified merging overlapped loops, significant loops with smaller anchors are first selected
 2018-03-26: modified to speed up
 2018-03-28: modified the mergeing method, small bugs fixed
+2019-01-08: according to CHEN Zhaoxiong's method, improve PETs extract through bisect
 """
 __date__ = "2017-03-15"
 __modified__ = ""
-__email__ = "caoyaqiang@picb.ac.cn chenxingwei@picb.ac.cn"
+__email__ = "caoyaqiang@picb.ac.cn chenzhaoxiong@picb.ac.cn chenxingwei@picb.ac.cn"
 
 #general library
-import gc
+import gc, bisect
 
 #3rd library
 import numpy as np
@@ -29,20 +30,12 @@ from cLoops.utils import cFlush
 def getCorLink(cs):
     """
     @param cs: [1,2,3,4], a list for the coordinates x or y
-    @rtype: dic, keys is the coordinate, value is the closest next coordinate and points index in this coordinate
     """
     ts = {}
     for i, c in enumerate(cs):
-        if c not in ts:
-            ts[c] = []
-        ts[c].append(i)
-    keys = sorted(ts.keys())
-    for i in xrange(len(keys) - 1):
-        ni = keys[i]
-        nj = keys[i + 1]
-        ts[ni] = {"next": nj, "points": ts[ni]}
-    ts[nj] = {"next": None, "points": ts[nj]}
-    return ts
+        ts.setdefault(c, []).append(i)
+    ts_keys = sorted(ts.keys())
+    return ts_keys, ts
 
 
 def getGenomeCoverage(f, cut=0):
@@ -55,21 +48,18 @@ def getGenomeCoverage(f, cut=0):
     j = mat.shape[0]
     if j < 2:
         return None, 0
-    xs = getCorLink(mat[:, 1])
-    ys = getCorLink(mat[:, 2])
-    return [xs, ys], j
+    xs_keys, xs = getCorLink(mat[:, 1])
+    ys_keys, ys = getCorLink(mat[:, 2])
+    return [[xs_keys, xs], [ys_keys, ys]], j
 
 
-def getCounts(iv, ts):
+def getCounts(iv, model):
     ps = []
-    pos = None
-    for i in xrange(iv[0], iv[1]):
-        if i in ts:
-            pos = i
-            break
-    while pos <= iv[1] and pos != None:
-        ps.extend(ts[pos]["points"])
-        pos = ts[pos]["next"]
+    ts_keys, ts = model
+    l_idx = bisect.bisect_left(ts_keys, iv[0])
+    r_idx = bisect.bisect_right(ts_keys, iv[1])
+    for i in range(l_idx, r_idx):
+        ps.extend(ts[ts_keys[i]])
     return set(ps)
 
 
@@ -186,14 +176,15 @@ def checkOneEndOverlap(xa, xb, ya, yb):
     return False
 
 
-def checkOverlap(ivai,ivbi,ivaj,ivbj):
+def checkOverlap(ivai, ivbi, ivaj, ivbj):
     """
     check the overlap of two anchors,ra=[chr,left_start,left_end,right_start,right_end]
     """
     if ivai[0] != ivaj[0] or ivbi[0] != ivbj[0]:
-        return 
-    if checkOneEndOverlap(ivai[1], ivai[2], ivaj[1], ivaj[2]) and checkOneEndOverlap(
-            ivbi[1], ivbi[2], ivbj[1], ivbj[2]):
+        return
+    if checkOneEndOverlap(ivai[1], ivai[2], ivaj[1],
+                          ivaj[2]) and checkOneEndOverlap(
+                              ivbi[1], ivbi[2], ivbj[1], ivbj[2]):
         return True
     return False
 
@@ -222,7 +213,7 @@ def removeDup(ds, bpcut=1e-5):
                 continue
             ivaj = parseIv(ds[keyj]["iva"])
             ivbj = parseIv(ds[keyj]["ivb"])
-            flagj = checkOverlap(ivai,ivbi,ivaj,ivbj)
+            flagj = checkOverlap(ivai, ivbi, ivaj, ivbj)
             #there is overlapped loops,collect them
             if flagj:
                 if keyi not in reds:
