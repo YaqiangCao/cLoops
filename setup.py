@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='cLoops',
-    version='0.92',
+    version='0.93',
     author=['Yaqiang Cao',"Zhaoxiong Chen"],
     author_email=['caoyaqiang@picb.ac.cn','chenzhaoxiong@picb.ac.cn'],
     url='https://github.com/YaqiangCao/cLoops',
