@@ -85,7 +85,7 @@ def mainHelp():
         required=True,
         type=str,
         help=
-        "Input file is mapped PETs, BEDPE format in gzip. Replicates could be input as -f A.bedpe.gz,B.bedpe.gz,C.bedpe.gz. Loops will be called with pooled data."
+        "Input file is mapped PETs, tab-delimited BEDPE format in gzip. Replicates could be input as -f A.bedpe.gz,B.bedpe.gz,C.bedpe.gz. Loops will be called with pooled data."
     )
     parser.add_argument(
         "-o", dest="fnOut", required=True, type=str, help="Output prefix.")
