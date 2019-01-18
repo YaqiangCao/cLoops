@@ -2,6 +2,7 @@ README.md
 setup.py
 cLoops/__init__.py
 cLoops/bk.py
+cLoops/blockDBSCAN.py
 cLoops/cDBSCAN.py
 cLoops/cDBSCAN2.py
 cLoops/cModel.py

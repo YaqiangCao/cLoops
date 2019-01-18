@@ -71,7 +71,7 @@ class blockDBSCAN:
 
     """
 
-    def __init__(self, mat, eps, minPts):
+    def __init__(self, mat, eps, minPts,mergeMargin=False):
         """
         @param mat: the raw or normalized [pointId,X,Y] data matrix
         @type mat : np.array
@@ -84,6 +84,7 @@ class blockDBSCAN:
         #: build the data in the class for global use
         self.eps = eps
         self.minPts = minPts
+        self.mergeMargin = mergeMargin
         #: cell width, city block distance
         self.cw = self.eps
         #: build the square index for quick neighbor search
@@ -246,7 +247,8 @@ class blockDBSCAN:
                         ymax = y
             rs.append([xmin, xmax, ymin, ymax, ps]) #boundary and points id
         #merge clusters
-        rs = mergeClusters( rs,self.eps /2 )
+        if self.mergeMargin:
+            rs = mergeClusters( rs,self.eps /2 )
         labels = {}
         for i, r in enumerate(rs):
             for p in r[-1]:
@@ -291,13 +293,6 @@ class blockDBSCAN:
     def getGridDist(self, keya, keyb):
         """
         """
-        #the target is noise and all its neighbours are noise or not searched then no searh meaning.
-        #pids = list(set(self.Gs2[keyb]).difference(set(self.Gs[keya])))
-        #pids = [p for p in pids if self.ps[p][-1] in [-1,-2]]
-        #if len(pids) < self.minPts:
-        #    return False
-        #if len(self.Gs[keyb]) < self.minPts:
-        #    return False
         for p in self.Gs[keya]:
             x = (self.ps[p][0], self.ps[p][1])
             for q in self.Gs[keyb]:
