@@ -177,5 +177,5 @@ Since v0.92 (2018-11-16 updated), we provide a scirpt named hicpropairs2bedpe to
 So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version as soon as there's available testing data.
 
 --------
-## cLoops Citations
+## cLoops citations
 1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
