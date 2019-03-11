@@ -13,9 +13,9 @@ You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCa
 ## Install
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. **Joblib version 0.11 is requried to avoid parallel computating bugs caused by it for newer version. Install it through pip2.7 install --user joblib==0.11.** If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
-wget https://github.com/YaqiangCao/cLoops/archive/0.92.tar.gz
-tar xvzf 0.92.tar.gz
-cd cLoops-0.92
+wget https://github.com/YaqiangCao/cLoops/archive/0.93.tar.gz
+tar xvzf 0.93.tar.gz
+cd cLoops-0.93
 python setup.py install    
 ```
 
@@ -175,3 +175,7 @@ Since v0.92 (2018-11-16 updated), we provide a scirpt named hicpropairs2bedpe to
 
 2. inter-chromosomal loops    
 So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version as soon as there's available testing data.
+
+--------
+## cLoops Citations
+1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
