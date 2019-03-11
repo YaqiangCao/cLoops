@@ -2,9 +2,10 @@
 """
 """
 
-class blockDBSCAN:
+
+class cDBSCAN:
     """
-    The major class of the blockDBSCAN algorithm, belong to CAO Yaqiang & CHEN Zhaoxiong.
+    The major class of the cDBSCAN algorithm, belong to CAO Yaqiang, CHEN Xingwei.
 
     """
 
@@ -12,11 +13,14 @@ class blockDBSCAN:
         """
         @param mat: the raw or normalized [pointId,X,Y] data matrix
         @type mat : np.array
+
         @param eps: The clustering distance threshold, key parameter in DBSCAN.
         @type eps: float
+
         @param minPts: The min point in neighbor to define a core point, key 
                 parameter in DBSCAN.
         @type minPts: int
+
         """
         #: build the data in the class for global use
         self.eps = eps
@@ -31,18 +35,19 @@ class blockDBSCAN:
         self.removeNoiseGrids()
         #: get the points for all neighbors
         self.buildGridNeighbors()
-        #: convert grids into points
-        self.centerGrids()
         #: get the clusters
         self.callClusters()
-        self.getLabels()
-        del self.Gs, self.Gs2, self.Gs3, self.ps
+        del self.Gs, self.Gs2, self.ps
 
-    def getDist(self, x, y):
+    def getDist(self, p, q):
         """
         Basic function 1, city block distance funciton.
         """
+        x = self.ps[p]
+        y = self.ps[q]
         d = abs(x[0] - y[0]) + abs(x[1] - y[1])
+        #euclidean distance ,just in case.
+        #d = np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2)
         return d
 
     def getNearbyGrids(self, cell):
@@ -78,7 +83,8 @@ class blockDBSCAN:
         for d in mat:
             nx = int((d[1] - minX) / self.cw) + 1
             ny = int((d[2] - minY) / self.cw) + 1
-            Gs.setdefault((nx, ny), []).append(d[0])
+            Gs.setdefault((nx, ny), [])
+            Gs[(nx, ny)].append(d[0])
             #last elements marks the class, initially -1 as noise
             ps[d[0]] = [d[1], d[2], nx, ny, -1]
         self.Gs, self.ps = Gs, ps
@@ -118,24 +124,6 @@ class blockDBSCAN:
             for p in self.Gs[cell]:
                 del self.ps[p]
             del self.Gs[cell]
-    
-    def centerGrids(self):
-        """
-        Algorithm 4: convert each grid into a point, and then cluster grids.
-        """
-        Gs3 = {}
-        for cell in self.Gs.keys():
-            pids = self.Gs[cell]
-            ps = []
-            x, y = 0, 0
-            for pid in pids:
-                x += self.ps[pid][0]
-                y += self.ps[pid][1]
-            x = x / len(pids)
-            y = y / len(pids)
-            Gs3[cell] = [x, y, len(pids), -1]
-            #print(cell,x,y,len(pids))
-        self.Gs3 = Gs3
 
     def callClusters(self):
         """
@@ -143,95 +131,75 @@ class blockDBSCAN:
         """
         #: clustering id, noise is -2 and unclassified point is -1.
         clusterId = 0
-        for key in self.Gs3:
-            #print("begining",key,self.Gs3[key])
-            if self.Gs3[key][-1] == -1:
+        for key in self.ps:
+            if self.ps[key][-1] == -1:
                 if self.expandCluster(key, clusterId):
                     clusterId += 1
-
-    def getLabels(self, ):
         #remove the noise and unclassified points
-        cs = {}
-        #label each point
-        for c in self.Gs3.keys():  #visit each cell
-            if self.Gs3[c][-1] == -2:
-                continue
-            cid = self.Gs3[c][-1]
-            for p in self.Gs[c]:
-                cs.setdefault(cid, []).append(p)
         labels = {}
-        for c, ps in cs.items():
-            for p in ps:
-                labels[p] = c
+        cs = {}
+        for p in self.ps.keys():
+            c = self.ps[p][-1]
+            if c == -2:
+                continue
+            labels[p] = c
+            if c not in cs:
+                cs[c] = []
+            cs[c].append(p)
+        for key in cs.keys():
+            if len(cs[key]) < self.minPts:
+                for p in cs[key]:
+                    del labels[p]
         self.labels = labels
 
     def expandCluster(self, pointKey, clusterId):
         """
         Search connection for given point to others.
+        
         @param pointKey: the key in self.dataPoints
         @type pointKey: 
+       
         @param clusterId: the cluster id for the current
         @type clusterId: int
+
         @return: bool
         """
-        seeds, near_sum = self.regionQuery(pointKey)
-        #print("init seeds:",seeds)
-        if near_sum < self.minPts:
-            self.Gs3[pointKey][-1] = -2
+        seeds = self.regionQuery(pointKey)
+        if len(seeds) < self.minPts:
+            self.ps[pointKey][-1] = -2
             return False
         else:
             for key in seeds:
-                self.Gs3[key][-1] = clusterId
-                #print("assign keyid",key,self.Gs3[key])
+                self.ps[key][-1] = clusterId
             while len(seeds) > 0:
-                currentP = seeds.pop(0)
-                result, near_sum = self.regionQuery(currentP)
-                if near_sum < self.minPts:
-                    continue
-                #print("current and find",currentP,result)
-                elif len(result) >= 2:
+                currentP = seeds[0]
+                result = self.regionQuery(currentP)
+                if len(result) >= self.minPts:
                     for key in result:
-                        if self.Gs3[key][-1] == -1:
-                            seeds.append(key)
-                        self.Gs3[key][-1] = clusterId
-                            #print("assigned clusterid",key,self.Gs3[key])
-                #print(seeds)
-                #print("\n")
+                        if self.ps[key][-1] in [-1, -2]:
+                            if self.ps[key][-1] == -1:
+                                seeds.append(key)
+                            self.ps[key][-1] = clusterId
+                del (seeds[0])
             return True
-
-    def getGridDist(self, keya, keyb):
-        """
-        """
-        for p in self.Gs[keya]:
-            x = (self.ps[p][0], self.ps[p][1])
-            for q in self.Gs[keyb]:
-                y = (self.ps[q][0], self.ps[q][1])
-                if self.getDist(x, y) <= self.eps:
-                    return True
-        return False
 
     def regionQuery(self, pointKey):
         """
         Find the related points to the queried point, city block distance is used.
+        
         @param pointKey: the key in self.dataPoints
         @type pointKey:
+        
         @return: list
         """
-        p = self.Gs3[pointKey]
-        x = (p[0], p[1])
+        p = self.ps[pointKey]
+        x = p[2]
+        y = p[3]
         #scan square and get nearby points.
         result = [pointKey]
-        psum = p[2]
-        for q in self.getNearbyGrids(pointKey):
+        for q in self.Gs2[(x, y)]:
             if q == pointKey:
                 continue
-            qq = self.Gs3[q]
-            y = (qq[0], qq[1])
-            if self.getDist(x, y) <= self.eps:
+            if self.getDist(pointKey, q) <= self.eps:
                 result.append(q)
-                psum += qq[2]
-            else:
-                if self.getGridDist(pointKey, q):
-                    result.append(q)
-                    psum += qq[2]
-        return result, psum
+        return result

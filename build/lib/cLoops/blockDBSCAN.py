@@ -1,14 +1,77 @@
 #--coding:utf-8 --
 """
 """
+from copy import deepcopy
+
+
+def checkOneEndOverlap(xa, xb, ya, yb):
+    """
+    check the overlap of a region for the same chromosome
+    """
+    if (ya <= xa <= yb) or (ya <= xb <= yb):
+        return True
+    if (xa <= ya <= xb) or (xa <= yb <= xb):
+        return True
+    return False
+
+
+def checkOverlap(ivai, ivbi, ivaj, ivbj,margin=None):
+    """
+    check the overlap of two anchors,ra=[chr,left_start,left_end,right_start,right_end], if there is small margin
+    """
+    if checkOneEndOverlap(ivai[0], ivai[1], ivaj[0], ivaj[1]) and checkOneEndOverlap( ivbi[0], ivbi[1], ivbj[0], ivbj[1]): 
+        return True
+    if margin != None:
+        if checkOneEndOverlap(ivai[0], ivai[1], ivaj[0]-margin, ivaj[1]-margin) and checkOneEndOverlap( ivbi[0], ivbi[1], ivbj[0], ivbj[1]): return True
+        if checkOneEndOverlap(ivai[0], ivai[1], ivaj[0]+margin, ivaj[1]+margin) and checkOneEndOverlap( ivbi[0], ivbi[1], ivbj[0], ivbj[1]): return True
+        if checkOneEndOverlap(ivai[0], ivai[1], ivaj[0]+margin, ivaj[1]+margin) and checkOneEndOverlap( ivbi[0], ivbi[1], ivbj[0]-margin, ivbj[1]-margin): return True
+        if checkOneEndOverlap(ivai[0], ivai[1], ivaj[0]+margin, ivaj[1]+margin) and checkOneEndOverlap( ivbi[0], ivbi[1], ivbj[0]+margin, ivbj[1]+margin): return True
+    return False
+
+
+def merge(rs,margin=None):
+    nrs = []
+    skips = set()
+    for i in range(len(rs)):
+        if i in skips:
+            continue
+        nr = deepcopy(rs[i])
+        for j in range(i + 1, len(rs)):
+            if j in skips:
+                continue
+            nrj = rs[j]
+            if checkOverlap([nr[0],nr[1]], [nr[2],nr[3]], [nrj[0],nrj[1]], [nrj[2],nrj[3]],margin):
+                skips.add(j)
+                nr[0] = min([nr[0],nrj[0]])
+                nr[1] = max([nr[1],nrj[1]])
+                nr[2] = min([nr[2],nrj[2]])
+                nr[3] = max([nr[3],nrj[3]])
+                nr[4].extend(nrj[4])
+        nrs.append(nr)
+    return nrs
+
+
+def mergeClusters( rs,margin=None ):
+    """
+    Merge overlapped clusters, 
+    rs = [  xmin,xmax,ymin,ymax,[pid1,pid2,pid3] ] 
+    """
+    i = 0
+    while True:
+        nrs = merge(rs,margin)
+        if len(nrs) == len(rs):
+            break
+        rs = nrs
+    return nrs
+
 
 class blockDBSCAN:
     """
-    The major class of the blockDBSCAN algorithm, belong to CAO Yaqiang & CHEN Zhaoxiong.
+    The major class of the blockDBSCAN algorithm, belong to CAO Yaqiang.
 
     """
 
-    def __init__(self, mat, eps, minPts):
+    def __init__(self, mat, eps, minPts,mergeMargin=False):
         """
         @param mat: the raw or normalized [pointId,X,Y] data matrix
         @type mat : np.array
@@ -21,6 +84,7 @@ class blockDBSCAN:
         #: build the data in the class for global use
         self.eps = eps
         self.minPts = minPts
+        self.mergeMargin = mergeMargin
         #: cell width, city block distance
         self.cw = self.eps
         #: build the square index for quick neighbor search
@@ -159,10 +223,36 @@ class blockDBSCAN:
             cid = self.Gs3[c][-1]
             for p in self.Gs[c]:
                 cs.setdefault(cid, []).append(p)
+        #collected clusters and get their boundary
+        rs = []
+        for cid, ps in cs.items():
+            if len(ps) < self.minPts:
+                continue
+            for i, p in enumerate(ps):
+                x = self.ps[p][0]
+                y = self.ps[p][1]
+                if i == 0:
+                    xmin = x
+                    xmax = x
+                    ymin = y
+                    ymax = y
+                else:
+                    if x < xmin:
+                        xmin = x
+                    if x > xmax:
+                        xmax = x
+                    if y < ymin:
+                        ymin = y
+                    if y > ymax:
+                        ymax = y
+            rs.append([xmin, xmax, ymin, ymax, ps]) #boundary and points id
+        #merge clusters
+        if self.mergeMargin:
+            rs = mergeClusters( rs,self.eps /2 )
         labels = {}
-        for c, ps in cs.items():
-            for p in ps:
-                labels[p] = c
+        for i, r in enumerate(rs):
+            for p in r[-1]:
+                labels[p] = i
         self.labels = labels
 
     def expandCluster(self, pointKey, clusterId):
@@ -174,9 +264,9 @@ class blockDBSCAN:
         @type clusterId: int
         @return: bool
         """
-        seeds, near_sum = self.regionQuery(pointKey)
+        seeds = self.regionQuery(pointKey)
         #print("init seeds:",seeds)
-        if near_sum < self.minPts:
+        if len(seeds) == 1 and self.Gs3[pointKey][2] < self.minPts:
             self.Gs3[pointKey][-1] = -2
             return False
         else:
@@ -184,17 +274,18 @@ class blockDBSCAN:
                 self.Gs3[key][-1] = clusterId
                 #print("assign keyid",key,self.Gs3[key])
             while len(seeds) > 0:
-                currentP = seeds.pop(0)
-                result, near_sum = self.regionQuery(currentP)
-                if near_sum < self.minPts:
-                    continue
+                currentP = seeds[0]
+                result = self.regionQuery(currentP)
                 #print("current and find",currentP,result)
-                elif len(result) >= 2:
+                if len(result) >= 2:
                     for key in result:
-                        if self.Gs3[key][-1] == -1:
-                            seeds.append(key)
-                        self.Gs3[key][-1] = clusterId
+                        if self.Gs3[key][-1] in [-1, -2]:
+                            if self.Gs3[key][2] >= self.minPts and self.Gs3[
+                                    key][-1] == -1:
+                                seeds.append(key)
+                            self.Gs3[key][-1] = clusterId
                             #print("assigned clusterid",key,self.Gs3[key])
+                del (seeds[0])
                 #print(seeds)
                 #print("\n")
             return True
@@ -221,7 +312,6 @@ class blockDBSCAN:
         x = (p[0], p[1])
         #scan square and get nearby points.
         result = [pointKey]
-        psum = p[2]
         for q in self.getNearbyGrids(pointKey):
             if q == pointKey:
                 continue
@@ -229,9 +319,7 @@ class blockDBSCAN:
             y = (qq[0], qq[1])
             if self.getDist(x, y) <= self.eps:
                 result.append(q)
-                psum += qq[2]
             else:
                 if self.getGridDist(pointKey, q):
                     result.append(q)
-                    psum += qq[2]
-        return result, psum
+        return result

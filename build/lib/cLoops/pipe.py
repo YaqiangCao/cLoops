@@ -39,7 +39,7 @@ from joblib import Parallel, delayed
 from cLoops.settings import *
 from cLoops.utils import getLogger, callSys, cFlush, mainHelp
 from cLoops.io import parseRawBedpe, parseRawBedpe2, txt2jd, parseJd, loops2washU, loops2juice
-from cLoops.cDBSCAN2 import cDBSCAN as DBSCAN
+from cLoops.cDBSCAN import cDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
 from cLoops.cModel import getIntSig, markIntSig, markIntSigHic
