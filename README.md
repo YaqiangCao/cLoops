@@ -164,7 +164,7 @@ In theory cLoops could be applied to more 3D genomic data as long as there are e
 
 --------
 ## Questions & Answers  
-Please address questions and bugs to Yaqiang Cao (caoyaqiang0410@gmail.com) or Daosheng Ai (aidaosheng@picb.ac.cn) or Zhaoxiong Chen (chenzhaoxiong@picb.ac.cn), using the subject as "cLoops: questions about" to escape misjudged as spams.  
+Please address questions and bugs to Yaqiang Cao (caoyaqiang0410@gmail.com) or Zhaoxiong Chen (chenzhaoxiong@picb.ac.cn), using the subject as "cLoops: questions about ###" to escape misjudged as spams.  
 
 Following are selected questions:
 
