@@ -36,7 +36,13 @@ Since version 0.8, cLoops added a parameter **--mode(-m)**, which is the pre-set
 
 --------
 ### Input  
-Mapped PETs in [BEDPE format](http://bedtools.readthedocs.io/en/latest/content/general-usage.html), compressed files with gzip are also accepected, following columns are necessary: chrom1 (1st),start1 (2),end1 (3),chrom2 (4),start2 (5),end2 (6),strand1 (9),strand2 (10). For the column of name or score, "." is accepcted.
+Mapped PETs in [BEDPE format](http://bedtools.readthedocs.io/en/latest/content/general-usage.html), compressed files with gzip are also accepected, following columns are necessary: chrom1 (1st),start1 (2),end1 (3),chrom2 (4),start2 (5),end2 (6),strand1 (9),strand2 (10). For the column of name or score, "." is accepcted. Columns are seperated by "\t".
+For example as following :
+```
+chr1	9945	10095	chr1	248946216	248946366	.	.	+	+
+chr1	10034	10184	chr1	180987	181137	.	.	+	-
+chr1	10286	10436	chr1	181103	181253	.	.	+	-
+```
 
 --------
 ### Output
