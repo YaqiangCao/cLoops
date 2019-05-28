@@ -1,0 +1,7 @@
+conda create -n cLoops python=2.7
+conda activate cLoops
+conda install scipy 
+conda install pandas 
+conda install seaborn 
+conda install joblib==0.11
+conda env export --name cLoops > cLoops_env.yaml
