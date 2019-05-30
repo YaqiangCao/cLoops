@@ -6,6 +6,7 @@ Home-page: https://github.com/YaqiangCao/cLoops
 Author: ['Yaqiang Cao', 'Zhaoxiong Chen']
 Author-email: ['caoyaqiang@picb.ac.cn', 'chenzhaoxiong@picb.ac.cn']
 License: UNKNOWN
+Description-Content-Type: UNKNOWN
 Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
         

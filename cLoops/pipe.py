@@ -63,9 +63,9 @@ def singleDBSCAN(f, eps, minPts, cut=0):
     if len(mat) == 0:
         return key, f, dataI, dataS, list(dis), list(dss)
     #data for interaction records, read for readId
-    report = "Clustering %s and %s using eps as %s, minPts as %s,pre-set distance cutoff as > %s" % (
+    report = "Clustering %s and %s using eps as %s, minPts as %s,pre-set distance cutoff as > %s\n" % (
         key[0], key[1], eps, minPts, cut)
-    logger.info(report)
+    sys.stderr.write(report)
     db = DBSCAN(mat, eps, minPts)
     labels = pd.Series(db.labels)
     mat = np.array(mat)
@@ -98,9 +98,9 @@ def singleDBSCAN(f, eps, minPts, cut=0):
         else:
             dataS.append(r)
             readS.extend(los)
-    report = "Clustering %s and %s finished. Estimated %s self-ligation reads and %s inter-ligation reads" % (
+    report = "Clustering %s and %s finished. Estimated %s self-ligation reads and %s inter-ligation reads\n" % (
         key[0], key[1], len(readS), len(readI))
-    logger.info(report)
+    sys.stderr.write(report)
     if len(dataI) > 0:
         dis = mat.loc[readI, "Y"] - mat.loc[readI, "X"]
     if len(dataS) > 0:

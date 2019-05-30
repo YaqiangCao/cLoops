@@ -1,4 +1,4 @@
-#!/home/caoyaqiang/miniconda3/bin/python
+#!/usr/bin/python
 #--coding:utf-8 --
 """
 stripe.py
