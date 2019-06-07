@@ -11,6 +11,17 @@ You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCa
 
 --------
 ## Install
+If you are familar with [conda](https://docs.conda.io/en/latest/), cLoops could be installed very easily with following after clone and cd in it. 
+```
+git clone https://github.com/YaqiangCao/cLoops
+cd cLoops
+conda env create --name cLoops --file cLoops_env.yaml
+conda activate cLoops 
+python setup.py install
+```
+Then every time just use **conda activate cLoops** to run cLoops enviroment. 
+
+Or you prefer the old school, install from scratch. 
 [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. **Joblib version 0.11 is requried to avoid parallel computating bugs caused by it for newer version. Install it through pip2.7 install --user joblib==0.11.** If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
 ```
 wget https://github.com/YaqiangCao/cLoops/archive/0.93.tar.gz
