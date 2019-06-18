@@ -109,7 +109,7 @@ wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples
 wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
 cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -m 4 -j -s -w 
 ```    
-To convert cLoops temp files to hic file for juicebox, [juicer tools](https://github.com/theaidenlab/juicer/wiki/Download) is required. Java 1.7 or 1.8 is also required to run juicer tools. Script named ***juicer_tools*** with following content should be put inside directory included in command environment, then enable its executable privilege.
+To convert cLoops temp files to hic file for juicebox, [juicer tools](https://github.com/theaidenlab/juicer/wiki/Download) are required. Java 1.7 or 1.8 is also required to run juicer tools. Script named ***juicer_tools*** with the following content should be put inside a directory included in command environment, then enable its executable privilege.
 ```
 #!/bin/sh
 java -jar /PATH/TO/JUICER_TOOLS_JAR_DIRECTORY/juicer_tools.1.8.9_jcuda.0.8.jar $@
