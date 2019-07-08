@@ -2,6 +2,7 @@
 """
 """
 
+
 class blockDBSCAN:
     """
     The major class of the blockDBSCAN algorithm, belong to CAO Yaqiang & CHEN Zhaoxiong.
@@ -118,7 +119,7 @@ class blockDBSCAN:
             for p in self.Gs[cell]:
                 del self.ps[p]
             del self.Gs[cell]
-    
+
     def centerGrids(self):
         """
         Algorithm 4: convert each grid into a point, and then cluster grids.
@@ -194,7 +195,7 @@ class blockDBSCAN:
                         if self.Gs3[key][-1] == -1:
                             seeds.append(key)
                         self.Gs3[key][-1] = clusterId
-                            #print("assigned clusterid",key,self.Gs3[key])
+                        #print("assigned clusterid",key,self.Gs3[key])
                 #print(seeds)
                 #print("\n")
             return True

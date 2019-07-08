@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 2017-07-20: loops2juicebox added
@@ -6,6 +6,7 @@
 2018-03-05: modified loops2juice
 2018-09-21: modified loops2washU to avoid "inf"
 2019-01-04: remove duplicate PETs checking to improve pre-processing speed.
+2019-07-08: updated PET class, better informative
 """
 
 __author__ = "CAO Yaqiang"
@@ -287,8 +288,8 @@ def loops2juice(fin, fout, logger, significant=1):
             except:
                 continue
             f.write("\t".join(map(str, nline)) + "\n")
-    logger.info(
-        "Converting %s to Juicebox 2D annotation feature finished." % fin)
+    logger.info("Converting %s to Juicebox 2D annotation feature finished." %
+                fin)
 
 
 def jd2washU(fs, fout, cut, ext):
@@ -325,7 +326,7 @@ def jd2washU(fs, fout, cut, ext):
     print "Converting %s to washU random accessed track finished." % fout
 
 
-def jd2hic(fs, fout, cut, org,resolution):
+def jd2hic(fs, fout, cut, org, resolution):
     """
     Convert reads level bedpe to HIC.
     Track format according to https://github.com/theaidenlab/juicer/wiki/Pre#file-format
@@ -339,7 +340,7 @@ def jd2hic(fs, fout, cut, org,resolution):
     with open(tmp, "w") as f:
         for fin in fs:
             print "converting %s" % fin
-            key, mat = parseJd(fin,cut)
+            key, mat = parseJd(fin, cut)
             for t in mat:
                 line = [0, key[0], t[1], 0, 1, key[1], t[2], 1]
                 f.write("\t".join(map(str, line)) + "\n")

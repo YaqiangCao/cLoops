@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 pipe.py
@@ -19,7 +19,7 @@ pipe.py
 2018-03-31: modified self-ligation and inter-ligation distance cutoff selection.
 2018-09-26: updated estimated distance cutoff to avoid 0 size self-ligated PETs
 2018-10-09: updated usage for self-ligation and inter-ligation distance cutoff.
-""" 
+"""
 __author__ = "CAO Yaqiang"
 __date__ = ""
 __modified__ = ""
@@ -69,8 +69,9 @@ def singleDBSCAN(f, eps, minPts, cut=0):
     db = DBSCAN(mat, eps, minPts)
     labels = pd.Series(db.labels)
     mat = np.array(mat)
-    mat = pd.DataFrame(
-        mat[:, 1:].astype("float"), index=mat[:, 0], columns=["X", "Y"])
+    mat = pd.DataFrame(mat[:, 1:].astype("float"),
+                       index=mat[:, 0],
+                       columns=["X", "Y"])
     nlabels = set(labels.values)
     #collect clusters
     for label in nlabels:
@@ -112,8 +113,8 @@ def runDBSCAN(fs, eps, minPts, cut=0, cpu=1):
     """
     Run DBSCAN to detect interactions for all chromosomes.
     """
-    ds = Parallel(n_jobs=cpu)(
-        delayed(singleDBSCAN)(f, eps, minPts, cut) for f in fs)
+    ds = Parallel(n_jobs=cpu)(delayed(singleDBSCAN)(f, eps, minPts, cut)
+                              for f in fs)
     dataI, dataS, dis, dss = {}, [], [], []
     for d in ds:
         if len(d[2]) == 0:
@@ -163,10 +164,10 @@ def combineTwice(dataI, dataI_2):
         else:
             ds = set()
             for r in dataI[key]["records"]:
-                t = [r[1],r[2],r[4],r[5]]
+                t = [r[1], r[2], r[4], r[5]]
                 ds.add(tuple(t))
             for r in dataI_2[key]["records"]:
-                t = tuple([r[1],r[2],r[4],r[5]])
+                t = tuple([r[1], r[2], r[4], r[5]])
                 if t not in ds:
                     dataI[key]["records"].append(r)
     return dataI
@@ -254,15 +255,15 @@ def pipe(fs,
             if len(dis_2) == 0 or len(dss_2) == 0:
                 dataI = combineTwice(dataI, dataI_2)
             else:
-                cut_2, frags = estIntSelCutFrag(
-                    np.array(dis_2), np.array(dss_2))
+                cut_2, frags = estIntSelCutFrag(np.array(dis_2),
+                                                np.array(dss_2))
                 if plot:
-                    plotIntSelCutFrag(
-                        dis_2,
-                        dss_2,
-                        cut_2,
-                        frags,
-                        prefix=fout + "_eps%s_minPts%s_disCutoff" % (ep, m))
+                    plotIntSelCutFrag(dis_2,
+                                      dss_2,
+                                      cut_2,
+                                      frags,
+                                      prefix=fout +
+                                      "_eps%s_minPts%s_disCutoff" % (ep, m))
                 logger.info(
                     "Estimated inter-ligation and self-ligation distance cutoff as %s for eps=%s,minPts=%s"
                     % (cut_2, ep, m))
@@ -341,9 +342,8 @@ def main():
     report = "mode:%s\t eps:%s\t minPts:%s\t hic:%s\t" % (op.mode, eps, minPts,
                                                           hic)
     logger.info(report)
-    pipe(
-        op.fnIn.split(","), op.fnOut, eps, minPts, op.chroms, op.cpu, op.tmp,
-        hic, op.washU, op.juice, op.cut, op.plot, op.max_cut)
+    pipe(op.fnIn.split(","), op.fnOut, eps, minPts, op.chroms, op.cpu, op.tmp,
+         hic, op.washU, op.juice, op.cut, op.plot, op.max_cut)
     usedtime = datetime.now() - start
     r = "cLoops finished. Used CPU time: %s Bye!\n\n\n" % usedtime
     logger.info(r)

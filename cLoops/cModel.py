@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 Stastical significance is tested for every chromosome using the local permutated background.
@@ -12,7 +12,7 @@ Stastical significance is tested for every chromosome using the local permutated
 """
 __date__ = "2017-03-15"
 __modified__ = ""
-__email__ = "caoyaqiang@picb.ac.cn chenzhaoxiong@picb.ac.cn chenxingwei@picb.ac.cn"
+__email__ = "caoyaqiang0410@gmail.com,chenzhaoxiong@picb.ac.cn"
 
 #general library
 import gc, bisect
@@ -241,8 +241,8 @@ def removeDup(ds, bpcut=1e-5):
             a = iva[2]-iva[1]+ivb[2]-ivb[1]
             b = float(ds[t]["rab"])/ds[t]["ra"]/ds[t]["rb"]
             c = float(ds[t]["rab"])/a
-            print t
-            print a,b,c,ds[t]["rab"],ds[t]["ra"],ds[t]["rb"],ds[t]["ES"],ds[t]["binomial_p-value"],ds[t]["poisson_p-value"]
+            print(t)
+            print(a,b,c,ds[t]["rab"],ds[t]["ra"],ds[t]["rb"],ds[t]["ES"],ds[t]["binomial_p-value"],ds[t]["poisson_p-value"])
         print 
         """
         if len(ts) == 0:
@@ -257,13 +257,14 @@ def getIntSig(f, records, minPts, discut):
     """
     @param:discut, distance cutoff determined for self-ligation pets.
     """
-    print "Starting estimate significance for %s candidate interactions in %s" % (
-        len(records), f)
+    print(
+        "Starting estimate significance for %s candidate interactions in %s" %
+        (len(records), f))
     model, N = getGenomeCoverage(f, discut)
-    print "Genomic coverage model built from %s" % f
+    print("Genomic coverage model built from %s" % f)
     if N == 0:
-        print "No cis-PETs parsed as requiring distance cutoff >%s from %s" % (
-            discut, f)
+        print("No cis-PETs parsed as requiring distance cutoff >%s from %s" %
+              (discut, f))
         return None
     #print "records:",len(records) #used for debuging
     ds = {}

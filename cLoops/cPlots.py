@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 """
@@ -25,10 +25,14 @@ def plotFragSize(ds, frag, log=1, prefix="test"):
     if log:
         ds = np.log2(ds)
     fig, ax = pylab.subplots()
-    sns.kdeplot(
-        ds, ax=ax, shade=True, label="distance between PETs", color=colors[0])
-    ax.axvline(
-        np.log2(frag), label="fragment size:%s bp" % (frag), color=colors[1])
+    sns.kdeplot(ds,
+                ax=ax,
+                shade=True,
+                label="distance between PETs",
+                color=colors[0])
+    ax.axvline(np.log2(frag),
+               label="fragment size:%s bp" % (frag),
+               color=colors[1])
     ax.set_xlabel("Distance between different strand PETs (log2(bp))")
     ax.set_ylabel("Density")
     ax.legend(loc="best")
@@ -49,22 +53,19 @@ def plotIntSelCutFrag(di, ds, cut, frag, log=1, prefix="test"):
         di = np.log2(di)
         ds = np.log2(ds)
     fig, ax = pylab.subplots()
-    sns.kdeplot(
-        di,
-        ax=ax,
-        shade=True,
-        label="inter-ligation PETs:%s" % len(di),
-        color=colors[0])
-    sns.kdeplot(
-        ds,
-        ax=ax,
-        shade=True,
-        label="self-ligation PETs:%s" % len(ds),
-        color=colors[1])
-    ax.axvline(
-        np.log2(cut),
-        label="distance cutoff:%.2f kb" % (cut / 1000.0),
-        color=colors[2])
+    sns.kdeplot(di,
+                ax=ax,
+                shade=True,
+                label="inter-ligation PETs:%s" % len(di),
+                color=colors[0])
+    sns.kdeplot(ds,
+                ax=ax,
+                shade=True,
+                label="self-ligation PETs:%s" % len(ds),
+                color=colors[1])
+    ax.axvline(np.log2(cut),
+               label="distance cutoff:%.2f kb" % (cut / 1000.0),
+               color=colors[2])
     #ax.axvline(
     #    np.log2(frag), label="fragment size:%s bp" % (frag), color=colors[3])
     leg = ax.legend(loc="best", shadow=True, fancybox=True)
