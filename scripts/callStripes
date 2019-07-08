@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 stripe.py
@@ -47,7 +47,7 @@ def singleStripDBSCAN(f, eps, minPts, extx=1, exty=1):
                                                                      key[1],
                                                                      eps,
                                                                      minPts)
-    print report
+    print(report)
     db = DBSCAN(mat, eps, minPts)
     labels = pd.Series(db.labels)
     mat = pd.DataFrame(
@@ -68,7 +68,7 @@ def singleStripDBSCAN(f, eps, minPts, extx=1, exty=1):
         ]
         dataI.append(r)
     report = "Clustering %s and %s finished." % (key[0], key[1])
-    print report
+    print(report)
     return key, dataI
 
 
@@ -182,10 +182,9 @@ def estStripeSig(f, records):
     """
     """
     model, N = getGenomeCoverage(f)
-    print "Genomic coverage model built from %s" % f
+    print("Genomic coverage model built from %s" % f)
     if N == 0:
-        print "No cis-PETs parsed as requiring distance cutoff >%s from %s" % (
-            discut, f)
+        print("No cis-PETs parsed as requiring distance cutoff >%s from %s" % ( discut, f)) 
         return None
     ds = {}
     i = 0
@@ -214,7 +213,7 @@ def estStripeSig(f, records):
             "ivb": "%s:%s-%s" % (chrom, ivb[0], ivb[1])
         }
         i += 1
-    print
+    print()
     #memory usage
     del model
     gc.collect()

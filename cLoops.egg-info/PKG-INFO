@@ -6,7 +6,6 @@ Home-page: https://github.com/YaqiangCao/cLoops
 Author: ['Yaqiang Cao', 'Zhaoxiong Chen']
 Author-email: ['caoyaqiang@picb.ac.cn', 'chenzhaoxiong@picb.ac.cn']
 License: UNKNOWN
-Description-Content-Type: UNKNOWN
 Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
         
@@ -20,6 +19,17 @@ Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         
         --------
         ## Install
+        If you are familar with [conda](https://docs.conda.io/en/latest/), cLoops could be installed very easily with following after clone and cd in it. 
+        ```
+        git clone https://github.com/YaqiangCao/cLoops
+        cd cLoops
+        conda env create --name cLoops --file cLoops_env.yaml
+        conda activate cLoops 
+        python setup.py install
+        ```
+        Then every time just use **conda activate cLoops** to run cLoops enviroment. 
+        
+        Or you prefer the old school, install from scratch. 
         [scipy](https://www.scipy.org/),[numpy](http://www.numpy.org/), [seaborn](https://seaborn.pydata.org/), [pandas](http://pandas.pydata.org/) and [joblib](https://pythonhosted.org/joblib/) are required. **Joblib version 0.11 is requried to avoid parallel computating bugs caused by it for newer version. Install it through pip2.7 install --user joblib==0.11.** If you have problems for installing scipy, please refer to [Anaconda](https://docs.continuum.io/anaconda/) or [SAGE](http://www.sagemath.org/).
         ```
         wget https://github.com/YaqiangCao/cLoops/archive/0.93.tar.gz
@@ -107,7 +117,12 @@ Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         wget https://github.com/YaqiangCao/cLoops_supplementaryData/blob/master/examples/GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz 
         cLoops -f GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio1.bedpe.gz,GSE80820_GM12878_cohesin_HiChIP_chr21_hg38_bio2.bedpe.gz -o hichip -m 4 -j -s -w 
         ```    
-        Then use jd2juice to convert cLoops temp files to hic file for juicebox:
+        To convert cLoops temp files to hic file for juicebox, [juicer tools](https://github.com/theaidenlab/juicer/wiki/Download) are required. Java 1.7 or 1.8 is also required to run juicer tools. Script named ***juicer_tools*** with the following content should be put inside a directory included in command environment, then enable its executable privilege.
+        ```
+        #!/bin/sh
+        java -jar /PATH/TO/JUICER_TOOLS_JAR_DIRECTORY/juicer_tools.1.8.9_jcuda.0.8.jar $@
+        ```
+        Then use jd2juice:
         ```
         jd2juice -d hichip -o hichip -org hg38 
         ``` 
@@ -195,6 +210,10 @@ Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         ## cLoops citations
         1. Cao Y, Chen G, Wu G, et al. Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions[J]. Genome research, 2019, 29(1): 40-52.
         1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
+        
+        --------
+        ## cLoops updates
+        
         
 Platform: UNKNOWN
 Classifier: Environment :: Console

@@ -1,4 +1,4 @@
-#!/usr/bin/env pyhthon2.7
+#!/usr/bin/env pyhthon
 #--coding:utf-8--
 """
 """

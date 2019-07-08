@@ -1,13 +1,5 @@
-#!/usr/bin/env pyhthon2.7
+#!/usr/bin/env python
 #--coding:utf-8--
-"""
-# Author: Ai Daosheng, Chen Zhaoxiong
-# Contact: remyai@hotmail.com, czx01@mail.ustc.edu.cn
-# Created Time : Mon 25 Sep 2017 04:10:24 PM CST
-# Last Modified : Fri 16 Nov 2018 01:07:13 AM CST
-# File Name: hicpropairs2bedpe.py
-# Description: convert pets format from HiC-Pro to bedpe format
-"""
 
 import argparse, gzip, os, re, sys
 from glob import glob

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 #--coding:utf-8 --
 """
 deLoops
@@ -138,7 +138,7 @@ def estSigTvsC(rs, modelt, Nt, modelc, Nc, pre):
             "poisson_p-value": p,
             "FoldEnrichment": fc
         }
-    print
+    print()
     if len(ds) == 0:
         return None
     ds = pd.DataFrame(ds).T
