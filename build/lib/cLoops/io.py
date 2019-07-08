@@ -130,7 +130,7 @@ def parseRawBedpe(fs, fout, cs, cut, logger):
 
 def parseRawBedpe2(fs, fout, cs, cut, logger):
     """
-    Get the cis-PETs, organized by chromosomes. Input could be mixed PETs in bedpe.gz. Also change read id to numbers.
+    Get the cis-PETs, organized by chromosomes. Input could be mixed PETs in bedpe.gz or bedpe. Also change read id to numbers to minize memory usage.
     @param fs: bedpe files of replicates, could be .bedpe or .bedpe.gz
     @param fout: output prefix, the name for directory
     @param cs: chroms that wanted, list like ["chr1","chr2"]
@@ -182,7 +182,7 @@ def parseRawBedpe2(fs, fout, cs, cut, logger):
             chroms[pet.chromA]["c"] += 1
             j += 1
     print()
-    del chroms
+    del(chroms)
     r = "Totaly %s PETs from %s, in which %s cis PETs" % (i, ",".join(fs), j)
     logger.info(r)
     return cfs

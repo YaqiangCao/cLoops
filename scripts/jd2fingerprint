@@ -4,6 +4,7 @@
 jd2fingerprint
 2017-10-12: finished 
 2017-10-15: integrated into cLoops 
+2019-07-08: cutoff selection for PET distance added.
 """
 __date__ = "2017-10-10"
 __modified__ = ""
@@ -21,15 +22,15 @@ from joblib import Parallel, delayed
 
 #cLoops
 from cLoops.utils import getLogger, jd2fingerprintHelp
-from cLoops.io import parseJd, parseIv
+from cLoops.io import parseJd
 from cLoops.cPlots import plotFingerPrint
 
 #global settings
 global logger
 
 
-def jd2contactMatrixUpper(jd, binSize=2000):
-    chrom, mat = parseJd(jd)
+def jd2contactMatrixUpper(jd,cut=0, binSize=2000):
+    chrom, mat = parseJd(jd,cut)
     mat = mat[:, 1:]
     minC = np.min(mat)
     ds = {}
@@ -64,15 +65,15 @@ def contactMatrixUpper2Bins(ds, bins=100):
     return nn
 
 
-def jds2FingerPrint(jds, binSize=2000, cpu=10, bins=100):
-    ds = Parallel(n_jobs=cpu)(delayed(jd2contactMatrixUpper)(jd, binSize)
+def jds2FingerPrint(jds, cut=0, binSize=2000, cpu=10, bins=100):
+    ds = Parallel(n_jobs=cpu)(delayed(jd2contactMatrixUpper)(jd, cut,binSize)
                               for jd in jds)
     ds = np.concatenate(ds)
     nn = contactMatrixUpper2Bins(ds, bins)
     return nn
 
 
-def getFingerPrint(dirs, labels, fout, binSize=2000, cpu=10, plot=1, bins=100):
+def getFingerPrint(dirs, labels, fout,cut=0, binSize=2000, cpu=10, plot=1, bins=100):
     dirs = dirs.split(",")
     if labels != "" and len(dirs) != len(labels.split(",")):
         logger.error(
@@ -113,6 +114,7 @@ if __name__ == "__main__":
         op.d,
         op.labels,
         op.output,
+        cut=op.cut,
         binSize=op.binSize,
         cpu=op.cpu,
         plot=op.plot)

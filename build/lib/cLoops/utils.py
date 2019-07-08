@@ -494,5 +494,11 @@ def jd2fingerprintHelp():
         help=
         "CPU number used to run the job, default is 1,set -1 to use all cpus available."
     )
+    parser.add_argument(
+        "-cut",
+        dest="cut",
+        type=int,
+        default=0,
+        help="Distance cutoff for PETs to filter, default is 0.")
     op = parser.parse_args()
     return op

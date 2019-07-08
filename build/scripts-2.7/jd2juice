@@ -6,7 +6,7 @@ jd2juice
 """
 __date__ = "2017-08-10"
 __modified__ = ""
-__email__ = "caoyaqiang@picb.ac.cn"
+__email__ = "caoyaqiang0410@gmail.com"
 
 #general library
 import os
