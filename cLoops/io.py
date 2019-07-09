@@ -7,6 +7,7 @@
 2018-09-21: modified loops2washU to avoid "inf"
 2019-01-04: remove duplicate PETs checking to improve pre-processing speed.
 2019-07-08: updated PET class, better informative
+2019-07-09: updated loops2washU, all loop value shown as 1
 """
 
 __author__ = "CAO Yaqiang"
@@ -236,7 +237,8 @@ def loops2washU(fin, fout, logger, significant=1):
             #iva,ivb,ES
             if str(line[1]) == "inf":
                 line[1] = 100
-            nline = [line[6], line[7], line[1]]
+            #nline = [line[6], line[7], line[1]]
+            nline = [line[6], line[7], "1"]
             f.write("\t".join(map(str, nline)) + "\n")
     logger.info(
         "Converting %s to washU long range interaction track finished." % fin)
