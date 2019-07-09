@@ -1,4 +1,4 @@
-#!/home/caoy7/anaconda2/envs/cLoops/bin/python
+#!/home/caoy7/anaconda2/envs/cLoops_test/bin/python
 #--coding:utf-8 --
 """
 jd2fingerprint
@@ -22,7 +22,7 @@ from joblib import Parallel, delayed
 
 #cLoops
 from cLoops.utils import getLogger, jd2fingerprintHelp
-from cLoops.io import parseJd, parseIv
+from cLoops.io import parseJd
 from cLoops.cPlots import plotFingerPrint
 
 #global settings

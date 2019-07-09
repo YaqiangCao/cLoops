@@ -74,11 +74,10 @@ def mainHelp():
     """
     Create the command line interface of the main programme for calling loops.
     """
-    epilog = EPILOG
     description = """
         Intra-chromosomal loops calling for ChIA-PET,HiChIP and high-resolution Hi-C data.
         """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(description=description, epilog=EPILOG)
     parser.add_argument(
         "-f",
         dest="fnIn",
@@ -281,13 +280,12 @@ def jd2washUHelp():
     """
     Create the command line interface for the script of jd2washU.
     """
-    epilog = EPILOG
     description = """
         Convert PETs level data to washU browser track for visualization. bedtools,bgzip,tabix are required.
         Example:
         jd2washU -d CTCF_ChIA-PET -o CTCF_ChIA-PET 
         """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(description=description, epilog=EPILOG)
     parser.add_argument(
         "-d",
         dest="dir",
@@ -322,13 +320,12 @@ def jd2juiceHelp():
     """
     Create the command line interface for the script of jd2juice.
     """
-    epilog = EPILOG
     description = """
         Convert PETs level data to .hic file to load in juicebox. The command "juicer_tools pre" is required in the enviroment.
         For example:
         jd2juice -d CTCF -o test -org hg38
         """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(description=description, epilog=EPILOG)
     parser.add_argument(
         "-d",
         dest="dir",
@@ -370,13 +367,12 @@ def jd2saturationHelp():
     """
     Create the command line interface for the script of jd2saturation.
     """
-    epilog = EPILOG
     description = """
         Re-sampling PETs to estimate loops detection saturation. 
         For example:
         jd2saturation -jd CTCF_chr21/chr21-chr21.jd -o test -s 5 -eps 750 -minPts 5
         """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(description=description, epilog=EPILOG)
     parser.add_argument(
         "-jd",
         dest="jd",
@@ -447,13 +443,12 @@ def jd2fingerprintHelp():
     """
     Create the command line interface for the script of jd2saturation.
     """
-    epilog = EPILOG
     description = """
         Get the finger print for the datasets using contact matrix with specific bin size, small bin sizes like 1000, 2000 are recommended.
         For exmaple:
-        jd2fingerprint -jd CTCF_ChIA-PET,cohesin_HiChIP,HiC -o test -bs 2000 -plot 1 -p 10 -labels CTCF_ChIA-PET,cohesin_HiChIP,HiC
+        jd2fingerprint -d CTCF_ChIA-PET,cohesin_HiChIP,HiC -o test -bs 2000 -plot 1 -p 10 -labels CTCF_ChIA-PET,cohesin_HiChIP,HiC
         """
-    parser = argparse.ArgumentParser(description=description, epilog=epilog)
+    parser = argparse.ArgumentParser(description=description, epilog=EPILOG)
     parser.add_argument(
         "-d",
         dest="d",

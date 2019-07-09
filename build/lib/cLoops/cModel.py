@@ -9,13 +9,14 @@ Stastical significance is tested for every chromosome using the local permutated
 2018-03-26: modified to speed up
 2018-03-28: modified the mergeing method, small bugs fixed
 2019-01-08: according to CHEN Zhaoxiong's method, improve PETs extract through bisect
+2019-07-08: replace bisect with np.searchsorted
 """
 __date__ = "2017-03-15"
 __modified__ = ""
 __email__ = "caoyaqiang0410@gmail.com,chenzhaoxiong@picb.ac.cn"
 
 #general library
-import gc, bisect
+import gc
 
 #3rd library
 import numpy as np
@@ -30,11 +31,14 @@ from cLoops.utils import cFlush
 def getCorLink(cs):
     """
     @param cs: [1,2,3,4], a list for the coordinates x or y
+    @return ts_keys: [ 1,2,3,4,5]
+            ts: { 1:0,2:1,3:2,4:3,5:4 }
     """
     ts = {}
     for i, c in enumerate(cs):
         ts.setdefault(c, []).append(i)
-    ts_keys = sorted(ts.keys())
+    #ts_keys = sorted(ts.keys())
+    ts_keys = np.sort( cs )
     return ts_keys, ts
 
 
@@ -56,8 +60,10 @@ def getGenomeCoverage(f, cut=0):
 def getCounts(iv, model):
     ps = []
     ts_keys, ts = model
-    l_idx = bisect.bisect_left(ts_keys, iv[0])
-    r_idx = bisect.bisect_right(ts_keys, iv[1])
+    #l_idx = bisect.bisect_left(ts_keys, iv[0])
+    #r_idx = bisect.bisect_right(ts_keys, iv[1])
+    l_idx = np.searchsorted(ts_keys, iv[0],side="left")
+    r_idx = np.searchsorted(ts_keys, iv[1],side="right")
     for i in range(l_idx, r_idx):
         ps.extend(ts[ts_keys[i]])
     return set(ps)

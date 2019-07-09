@@ -26,7 +26,8 @@ def mergeOverlap(ra, rb):
     nr = [
         ra[0],
         min([ra[1], rb[1]]),
-        max([ra[2], rb[2]]), ra[3],
+        max([ra[2], rb[2]]), 
+        ra[3],
         min([ra[4], rb[4]]),
         max([ra[5], rb[5]])
     ]

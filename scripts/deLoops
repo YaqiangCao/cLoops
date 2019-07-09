@@ -167,9 +167,7 @@ def estSigOneChr(rst, bedpet, rsc, bedpec, pre, dis=0):
 def callDeLoops(ra, rb, prea, preb, dis=0, cpu=1):
     logger.info("Calling differentially enriched loops for %s vs %s" % (prea,
                                                                         preb))
-    ds = Parallel(n_jobs=cpu)(delayed(estSigOneChr)(
-        ra[key]["rs"], ra[key]["f"], rb[key]["rs"], rb[key]["f"], key, dis)
-                              for key in ra.keys())
+    ds = Parallel(n_jobs=cpu)(delayed(estSigOneChr)( ra[key]["rs"], ra[key]["f"], rb[key]["rs"], rb[key]["f"], key, dis) for key in ra.keys())
     dsa, dsb = [], []
     for t in ds:
         if t[0] is not None:
