@@ -193,10 +193,14 @@ Following are selected questions:
 -------
 1. HiC-Pro to bedpe     
 The [allValidPairs](http://nservant.github.io/HiC-Pro/MANUAL.html#browsing-the-results) can be converted to BEDPE file. You can define a extension size (like half of the reads length) along the reads strand direction. In cLoops' first step, all coordinates are converted from (startA+endA)/2,(startB+endB)/2 to (x,y), so actually the extension size doesn't matter.
-Since v0.92 (2018-11-16 updated), we provide a scirpt named hicpropairs2bedpe to convert HiC-Pro output to cLoops input BEDPE file. Once cLoops installed, hicpropairs2bedpe is available through command line. 
+Since v0.92 (2018-11-16 updated), we provide a scirpt named [hicpropairs2bedpe](https://github.com/YaqiangCao/cLoops/blob/master/scripts/hicpropairs2bedpe) to convert HiC-Pro output to cLoops input BEDPE file. Once cLoops installed, hicpropairs2bedpe is available through command line. 
 
 2. inter-chromosomal loops    
 So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version as soon as there's available testing data.
+
+3. For multiple eps and minPts parameters, how cLoops determine the output loops?
+For example, eps=5000,7500,10000 and minPts=5,10,20, so total there will be 9 clustering carried out to find potential loop regions, candidate with PETs less than max(minPts) (here 20) will be filtered. Further, for overlapped loops, after the significance test, cLoops will output the one with highest significance by binomial test.
+The reason for multiple times of clustering with eps and minPts is that,1) though DBSCAN clustering (or other) is great, there will be some random result due to the visit order of points, even though we try to control it; 2) no idea theory estimation of the parameters. 3) Hi-C data quality may different from one set to another.
 
 --------
 ## cLoops citations
@@ -206,4 +210,4 @@ So far cLoops doesn't support calling inter-chromosomal loops, as there are few 
 
 --------
 ## cLoops updates
-
+Please check at the released versions. 
