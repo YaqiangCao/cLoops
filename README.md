@@ -212,6 +212,7 @@ The reason for multiple times of clustering with eps and minPts is that,1) thoug
 1. Cao Y, Chen G, Wu G, et al. Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions[J]. Genome research, 2019, 29(1): 40-52.
 1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
 1. Shimbo, Takashi.,Kawamura, Machika.,Wijaya, Edward.,Takaki, Eiichi.,Kaneda, Yasufumi.,Tamai, Katsuto. (2019). Cut-C: cleavage under tethered nuclease for conformational capture. BMC Genomics
+1. Abbas Roayaei Ardakany, Ferhat Ay, Stefano Lonardi, Selfish: discovery of differential chromatin interactions via a self-similarity measure, Bioinformatics, Volume 35, Issue 14, July 2019, Pages i145–i153, https://doi.org/10.1093/bioinformatics/btz362
 
 --------
 ## cLoops updates
