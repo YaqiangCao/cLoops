@@ -6,13 +6,19 @@ Home-page: https://github.com/YaqiangCao/cLoops
 Author: ['Yaqiang Cao', 'Zhaoxiong Chen']
 Author-email: ['caoyaqiang@picb.ac.cn', 'chenzhaoxiong@picb.ac.cn']
 License: UNKNOWN
+Description-Content-Type: UNKNOWN
 Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
         
         ## Introduction
         Chromosome conformation capture (3C) derived high-throughput sequencing methods such as ChIA-PET,HiChIP and Hi-C provide genome-wide view of chromatin organization. Fine scale loops formed by interactions of regulatory elements spanning hundreds kilobases can be detected from these data. Here we introduce cLoops ('see loops'),a common loops calling tool for ChIA-PET, HiChIP and high-resolution Hi-C data. Paired-end tags (PETs) are first classified as self-ligation and inter-ligation clusters using an optimized unsupervisied clustering algorithm. The significances of the inter-ligation clusters are then estimated using permutated local background. 
         
-        If you find cLoops useful, please give us a star at github and cite our paper (***in preparation***):   
+        If you find cLoops useful, please give us a star at github and cite our paper :
+        
+        Official version: 
+        ***Yaqiang Cao, Zhaoxiong Chen, Xingwei Chen, Daosheng Ai, Guoyu Chen, Joseph McDermott, Yi Huang, Guo Xiaoxiao, Jing-Dong J Han, Accurate loop calling for 3D genomic data with cLoops, Bioinformatics, , btz651, https://doi.org/10.1093/bioinformatics/btz651***
+        
+        Preprint bioRxiv:
         ***Yaqiang Cao, Xingwei Chen, Daosheng Ai, Zhaoxiong Chen, Guoyu Chen, Joseph McDermott, Yi Huang, Jing-Dong J. Han (2018) "Accurate loop calling for 3D genomic data with cLoops" bioRxiv 465849; doi: https://doi.org/10.1101/465849***
         
         You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCao/cLoops/wiki)
@@ -201,19 +207,25 @@ Description: # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
         -------
         1. HiC-Pro to bedpe     
         The [allValidPairs](http://nservant.github.io/HiC-Pro/MANUAL.html#browsing-the-results) can be converted to BEDPE file. You can define a extension size (like half of the reads length) along the reads strand direction. In cLoops' first step, all coordinates are converted from (startA+endA)/2,(startB+endB)/2 to (x,y), so actually the extension size doesn't matter.
-        Since v0.92 (2018-11-16 updated), we provide a scirpt named hicpropairs2bedpe to convert HiC-Pro output to cLoops input BEDPE file. Once cLoops installed, hicpropairs2bedpe is available through command line. 
+        Since v0.92 (2018-11-16 updated), we provide a scirpt named [hicpropairs2bedpe](https://github.com/YaqiangCao/cLoops/blob/master/scripts/hicpropairs2bedpe) to convert HiC-Pro output to cLoops input BEDPE file. Once cLoops installed, hicpropairs2bedpe is available through command line. 
         
         2. inter-chromosomal loops    
         So far cLoops doesn't support calling inter-chromosomal loops, as there are few significant inter-chromosomal loops called for our tested data and it takes a long time to run. However, we'll try to implement a script for calling this kind of loops for next version as soon as there's available testing data.
+        
+        3. For multiple eps and minPts parameters, how cLoops determine the output loops?          
+        For example, eps=5000,7500,10000 and minPts=5,10,20, so total there will be 9 clustering carried out to find potential loop regions, candidate with PETs less than max(minPts) (here 20) will be filtered. Further, for overlapped loops, after the significance test, cLoops will output the one with highest significance by binomial test.
+        The reason for multiple times of clustering with eps and minPts is that,1) though DBSCAN clustering (or other) is great, there will be some random result due to the visit order of points, even though we try to control it; 2) no idea theory estimation of the parameters. 3) Hi-C data quality may different from one set to another.
         
         --------
         ## cLoops citations
         1. Cao Y, Chen G, Wu G, et al. Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions[J]. Genome research, 2019, 29(1): 40-52.
         1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
+        1. Shimbo, Takashi.,Kawamura, Machika.,Wijaya, Edward.,Takaki, Eiichi.,Kaneda, Yasufumi.,Tamai, Katsuto. (2019). Cut-C: cleavage under tethered nuclease for conformational capture. BMC Genomics
+        1. Abbas Roayaei Ardakany, Ferhat Ay, Stefano Lonardi, Selfish: discovery of differential chromatin interactions via a self-similarity measure, Bioinformatics, Volume 35, Issue 14, July 2019, Pages i145–i153, https://doi.org/10.1093/bioinformatics/btz362
         
         --------
         ## cLoops updates
-        
+        Please check at the released versions. 
         
 Platform: UNKNOWN
 Classifier: Environment :: Console

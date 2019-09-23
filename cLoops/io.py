@@ -222,11 +222,12 @@ def loops2washU(fin, fout, logger, significant=1):
     Convert interaction level loop file to washU long range interactions. 
     Track format according to http://wiki.wubrowse.org/Long-range
     @param fin: interactions in loop file
-    @param fout: washU  long-range interaction text file prefix
+    @param fout: washU long-range interaction text file prefix
     @param significant: if set 1, only convert significant loops.
     """
     logger.info("Converting %s to washU long range interaction track." % fin)
-    with open(fout, "w") as f:
+    tmp = str(random.random())
+    with open(tmp, "w") as f:
         for i, line in enumerate(open(fin)):
             if i == 0:
                 continue
@@ -234,12 +235,25 @@ def loops2washU(fin, fout, logger, significant=1):
             #only using significant results
             if significant and float(line[-1]) < 1:
                 continue
-            #iva,ivb,ES
             if str(line[1]) == "inf":
                 line[1] = 100
-            #nline = [line[6], line[7], line[1]]
-            nline = [line[6], line[7], "1"]
-            f.write("\t".join(map(str, nline)) + "\n")
+            a = parseIv(line[6])
+            b = parseIv(line[7])
+            linea = [
+                a[0], a[1], a[2],
+                "%s,1" % line[7]
+            ]
+            lineb = [
+                b[0], b[1], b[2],
+                "%s,1" % line[6]
+            ]
+            f.write("\t".join(map(str, linea)) + "\n")
+            f.write("\t".join(map(str, lineb)) + "\n")
+    c1 = "bedtools sort -i %s > %s" % (tmp, fout)
+    c2 = "rm %s" % tmp
+    c3 = "bgzip %s" % fout
+    c4 = "tabix -p bed %s.gz" % fout
+    callSys([c1, c2, c3, c4])
     logger.info(
         "Converting %s to washU long range interaction track finished." % fin)
 
@@ -258,7 +272,7 @@ def loops2juice(fin, fout, logger, significant=1):
     Convert interaction level loop file to Juicebox 2D annotation features. 
     The txt file format according to https://github.com/theaidenlab/juicebox/wiki/Loading-Annotations-(Annotations-menu)
     @param fin: interactions in loop file
-    @param fout: washU  long-range interaction text file prefix
+    @param fout: long-range interaction text file prefix
     @param significant: if set 1, only convert significant loops.
     all p-values are -log10(p) transformed to escape all shown as 0 in juicebox.
     """
