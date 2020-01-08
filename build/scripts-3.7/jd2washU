@@ -1,0 +1,26 @@
+#!/home/caoy7/anaconda2/envs/cLoops/bin/python
+#--coding:utf-8 --
+"""
+jd2washU
+2017-08-10
+"""
+__date__ = "2017-08-10"
+__modified__ = ""
+__email__ = "caoyaqiang0410@gmail.com"
+
+#general library
+import os
+from glob import glob
+
+#3rd library
+import numpy as np
+import joblib
+
+#cLoops
+from cLoops.io import jd2washU
+from cLoops.utils import jd2washUHelp
+
+if __name__ == "__main__":
+    op = jd2washUHelp()
+    fs = glob(os.path.join(op.dir, "*.jd"))
+    jd2washU(fs, op.output + "_PETs_washU.txt", op.cut, op.ext)

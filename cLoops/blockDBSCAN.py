@@ -5,6 +5,7 @@
 
 class blockDBSCAN:
     """
+    Enhanced version of cDBSCAN, faster, more sensitive and more accurate.
     The major class of the blockDBSCAN algorithm, belong to CAO Yaqiang & CHEN Zhaoxiong.
 
     """
@@ -140,7 +141,7 @@ class blockDBSCAN:
 
     def callClusters(self):
         """
-        Algorithm 4: Do DBSCAN clustering by go through all points in the sets.
+        Algorithm 4: Do DBSCAN clustering by go through all grids in the sets.
         """
         #: clustering id, noise is -2 and unclassified point is -1.
         clusterId = 0

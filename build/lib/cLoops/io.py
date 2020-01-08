@@ -7,6 +7,7 @@
 2018-09-21: modified loops2washU to avoid "inf"
 2019-01-04: remove duplicate PETs checking to improve pre-processing speed.
 2019-07-08: updated PET class, better informative
+2019-07-09: updated loops2washU, all loop value shown as 1
 """
 
 __author__ = "CAO Yaqiang"
@@ -221,7 +222,7 @@ def loops2washU(fin, fout, logger, significant=1):
     Convert interaction level loop file to washU long range interactions. 
     Track format according to http://wiki.wubrowse.org/Long-range
     @param fin: interactions in loop file
-    @param fout: washU  long-range interaction text file prefix
+    @param fout: washU long-range interaction text file prefix
     @param significant: if set 1, only convert significant loops.
     """
     logger.info("Converting %s to washU long range interaction track." % fin)
@@ -233,13 +234,9 @@ def loops2washU(fin, fout, logger, significant=1):
             #only using significant results
             if significant and float(line[-1]) < 1:
                 continue
-            #iva,ivb,ES
-            if str(line[1]) == "inf":
-                line[1] = 100
-            nline = [line[6], line[7], line[1]]
+            nline = [line[6], line[7], "1"]
             f.write("\t".join(map(str, nline)) + "\n")
-    logger.info(
-        "Converting %s to washU long range interaction track finished." % fin)
+    logger.info( "Converting %s to washU long range interaction track finished." % fin)
 
 
 def parseIv(iv):
@@ -256,7 +253,7 @@ def loops2juice(fin, fout, logger, significant=1):
     Convert interaction level loop file to Juicebox 2D annotation features. 
     The txt file format according to https://github.com/theaidenlab/juicebox/wiki/Loading-Annotations-(Annotations-menu)
     @param fin: interactions in loop file
-    @param fout: washU  long-range interaction text file prefix
+    @param fout: long-range interaction text file prefix
     @param significant: if set 1, only convert significant loops.
     all p-values are -log10(p) transformed to escape all shown as 0 in juicebox.
     """

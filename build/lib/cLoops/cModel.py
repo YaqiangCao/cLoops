@@ -334,7 +334,7 @@ def getIntSig(f, records, minPts, discut):
 def markIntSig(ds,
                escut=2.0,
                fdrcut=1e-2,
-               bpcut=1e-5,
+               bpcut=1e-3,
                ppcut=1e-5,
                hypcut=1e-10):
     """
@@ -356,6 +356,7 @@ def markIntSig(ds,
     e = ds.loc[d.index, "binomial_p-value"]
     e = e[e <= bpcut]
     rs = e.index
+    #rs = d.index
     ns = pd.Series(data=np.zeros(ds.shape[0]), index=ds.index)
     ns[rs] = 1.0
     ds["significant"] = ns

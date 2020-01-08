@@ -398,6 +398,7 @@ def callStripesHelp():
         "-eps",
         dest="eps",
         default=20000,
+        type=int,
         required=False,
         help=
         "Distance that define two points being neighbors, eps in cDBSCAN as key parameter, same to eps parameter in cLoops. To call stripes, it's quite different from call loops, here default set is 20000."
@@ -406,6 +407,7 @@ def callStripesHelp():
         "-minPts",
         dest="minPts",
         default=5,
+        type=int,
         help=
         "Points required in a cluster, minPts in cDBSCAN, key parameter, same to minPts parameter in cLoops. To call stripes, it's quite different from call loops, here default set is 5."
     )

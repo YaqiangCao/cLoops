@@ -226,8 +226,7 @@ def loops2washU(fin, fout, logger, significant=1):
     @param significant: if set 1, only convert significant loops.
     """
     logger.info("Converting %s to washU long range interaction track." % fin)
-    tmp = str(random.random())
-    with open(tmp, "w") as f:
+    with open(fout, "w") as f:
         for i, line in enumerate(open(fin)):
             if i == 0:
                 continue
@@ -235,27 +234,9 @@ def loops2washU(fin, fout, logger, significant=1):
             #only using significant results
             if significant and float(line[-1]) < 1:
                 continue
-            if str(line[1]) == "inf":
-                line[1] = 100
-            a = parseIv(line[6])
-            b = parseIv(line[7])
-            linea = [
-                a[0], a[1], a[2],
-                "%s,1" % line[7]
-            ]
-            lineb = [
-                b[0], b[1], b[2],
-                "%s,1" % line[6]
-            ]
-            f.write("\t".join(map(str, linea)) + "\n")
-            f.write("\t".join(map(str, lineb)) + "\n")
-    c1 = "bedtools sort -i %s > %s" % (tmp, fout)
-    c2 = "rm %s" % tmp
-    c3 = "bgzip %s" % fout
-    c4 = "tabix -p bed %s.gz" % fout
-    callSys([c1, c2, c3, c4])
-    logger.info(
-        "Converting %s to washU long range interaction track finished." % fin)
+            nline = [line[6], line[7], "1"]
+            f.write("\t".join(map(str, nline)) + "\n")
+    logger.info( "Converting %s to washU long range interaction track finished." % fin)
 
 
 def parseIv(iv):

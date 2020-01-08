@@ -40,6 +40,7 @@ from cLoops.settings import *
 from cLoops.utils import getLogger, callSys, cFlush, mainHelp
 from cLoops.io import parseRawBedpe, parseRawBedpe2, txt2jd, parseJd, loops2washU, loops2juice
 from cLoops.cDBSCAN2 import cDBSCAN as DBSCAN
+#from cLoops.blockDBSCAN import blockDBSCAN as DBSCAN
 from cLoops.ests import estFragSize, estIntSelCutFrag
 from cLoops.cPlots import plotFragSize, plotIntSelCutFrag
 from cLoops.cModel import getIntSig, markIntSig, markIntSigHic
@@ -277,8 +278,10 @@ def pipe(fs,
         cut = np.max(cuts)
     else:
         cut = np.min(cuts)
+    dataI = filterClusterByDis(dataI, cut)
     #5.estimate the significance
-    e = runStat(dataI, minPts, cut, cpu, fout, hic)
+    #e = runStat(dataI, minPts, cut, cpu, fout, hic)
+    e = runStat(dataI, minPts, 0, cpu, fout, hic)
     if e:
         shutil.rmtree(fout)
         return
