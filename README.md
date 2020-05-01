@@ -214,6 +214,7 @@ The reason for multiple times of clustering with eps and minPts is that,1) thoug
 1. Shimbo, Takashi.,Kawamura, Machika.,Wijaya, Edward.,Takaki, Eiichi.,Kaneda, Yasufumi.,Tamai, Katsuto. (2019). Cut-C: cleavage under tethered nuclease for conformational capture. BMC Genomics
 1. Abbas Roayaei Ardakany, Ferhat Ay, Stefano Lonardi, Selfish: discovery of differential chromatin interactions via a self-similarity measure, Bioinformatics, Volume 35, Issue 14, July 2019, Pages i145–i153, https://doi.org/10.1093/bioinformatics/btz362
 1. Li, Xiao, Ziyang An, and Zhihua Zhang. "Comparison of computational methods for 3D genome analysis at single-cell Hi-C level." Methods (2019).
+1. Luo Z, Wang X, Jiang H, et al. Reorganized 3D genome structures support transcriptional regulation in mouse spermatogenesis[J]. Iscience, 2020: 101034.
 
 --------
 ## cLoops updates
