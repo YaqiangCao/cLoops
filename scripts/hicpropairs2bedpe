@@ -6,7 +6,7 @@ from glob import glob
 from datetime import datetime
 
 
-def pairs2bedpe(f_hicpro, f_out):
+def pairs2bedpe(f_hicpro, f_out, ext=50):
     with gzip.open(f_out, 'wt') as f_bedpe:
         if f_hicpro.endswith('.gz'):
             f_pair = gzip.open(f_hicpro)
@@ -14,14 +14,8 @@ def pairs2bedpe(f_hicpro, f_out):
             f_pair = open(f_hicpro)
         for line in f_pair:
             line = line.strip().split('\t')
-            if line[3] == '+':
-                petA = [line[1], line[2], int(line[2]) + int(line[-2])]
-            else:
-                petA = [line[1], int(line[2]) - int(line[-2]), line[2]]
-            if line[6] == '+':
-                petB = [line[4], line[5], int(line[5]) + int(line[-1])]
-            else:
-                petB = [line[4], int(line[5]) - int(line[-1]), line[5]]
+            petA = [line[1], int(line[2])-ext, int(line[2])+ext]
+            petB = [line[4], int(line[5])-ext, int(line[5])+ext]
             newline = [
                 petA[0], petA[1], petA[2], petB[0], petB[1], petB[2], line[0],
                 '.', line[3], line[6]
@@ -65,7 +59,7 @@ def main():
             bedpe_file = hicpro_file
         bedpe_file = re.sub(r'_allValidPairs(.gz)?$', '', bedpe_file)
         bedpe_file = bedpe_file + '.bedpe.gz'
-        pairs2bedpe(hicpro_file, bedpe_file)
+        pairs2bedpe(hicpro_file, bedpe_file, ext=op.ext)
     usedtime = datetime.now() - start_time
     sys.stderr.write("Prcess finished. Used CPU time: %s Bye!\n" % usedtime)
 
@@ -88,6 +82,15 @@ def mainHelp():
         type=str,
         help=
         "Output directory. If specified all converted bedpe file will be put inside this folder rather than the same folder of respective input file. Names of files inside different directories should be unique, otherwise some output files will be overwrote."
+    )
+    parser.add_argument(
+        '-ext',
+        dest="ext",
+        required=False,
+        type=int,
+        default=50,
+        help=
+        "Extension from read center (HiC-Pro output the center of each read), default is 50. "
     )
     op = parser.parse_args()
     return op
