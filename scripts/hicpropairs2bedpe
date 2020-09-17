@@ -14,8 +14,19 @@ def pairs2bedpe(f_hicpro, f_out, ext=50):
             f_pair = open(f_hicpro)
         for line in f_pair:
             line = line.strip().split('\t')
-            petA = [line[1], int(line[2])-ext, int(line[2])+ext]
-            petB = [line[4], int(line[5])-ext, int(line[5])+ext]
+            #if the position is the middle of the read
+            #petA = [line[1], int(line[2])-ext, int(line[2])+ext]
+            #petB = [line[4], int(line[5])-ext, int(line[5])+ext]
+            #if the position is the 5' end of the read
+            if line[3] == "+":
+                petA = [line[1], int(line[2]), int(line[2])+ext]
+            else:
+                petA = [line[1], int(line[2])-ext, int(line[2])]
+            if line[6] == "+":
+                petB = [line[4], int(line[5]), int(line[5])+ext]
+            else:
+                petB = [line[4], int(line[5])-ext, int(line[5])]
+
             newline = [
                 petA[0], petA[1], petA[2], petB[0], petB[1], petB[2], line[0],
                 '.', line[3], line[6]
