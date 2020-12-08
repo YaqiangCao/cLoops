@@ -209,9 +209,9 @@ The reason for multiple times of clustering with eps and minPts is that,1) thoug
 
 --------
 ## selected cLoops citations
-1. Cao Y, Chen G, Wu G, et al. Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions[J]. Genome research, 2019, 29(1): 40-52.
+1. Cao, Yaqiang, et al. "Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions." Genome research 29.1 (2019): 40-52.
 1. Alavattam, Kris G., et al. "Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development." Nature structural & molecular biology 26.3 (2019): 175-184.
-1. Luo Z, Wang X, Jiang H, et al. Reorganized 3D genome structures support transcriptional regulation in mouse spermatogenesis[J]. Iscience, 2020: 101034.
+1. Luo, Zhengyu, et al. "Reorganized 3D genome structures support transcriptional regulation in mouse spermatogenesis." Iscience (2020): 101034.
 1. Johnstone, Sarah E., et al. "Large-Scale Topological Changes Restrain Malignant Progression in Colorectal Cancer." Cell (2020).
 1. Zhen, Tao, et al. "RUNX1 and CBFβ-SMMHC transactivate target genes together in abnormal myeloid progenitors for leukemia development." Blood, The Journal of the American Society of Hematology 136.21 (2020): 2373-2385.
 1. Ma, Sai, et al. "Chromatin Potential Identified by Shared Single-Cell Profiling of RNA and Chromatin." Cell 183.4 (2020): 1103-1116. 
