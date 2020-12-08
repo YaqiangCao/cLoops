@@ -208,14 +208,13 @@ For example, eps=5000,7500,10000 and minPts=5,10,20, so total there will be 9 cl
 The reason for multiple times of clustering with eps and minPts is that,1) though DBSCAN clustering (or other) is great, there will be some random result due to the visit order of points, even though we try to control it; 2) no idea theory estimation of the parameters. 3) Hi-C data quality may different from one set to another.
 
 --------
-## cLoops citations
+## selected cLoops citations
 1. Cao Y, Chen G, Wu G, et al. Widespread roles of enhancer-like transposable elements in cell identity and long-range genomic interactions[J]. Genome research, 2019, 29(1): 40-52.
-1. Alavattam, K. G., Maezawa, S., Sakashita, A., Khoury, H., Barski, A., Kaplan, N., & Namekawa, S. H. (2019). Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development. Nature structural & molecular biology, 1.
-1. Shimbo, Takashi.,Kawamura, Machika.,Wijaya, Edward.,Takaki, Eiichi.,Kaneda, Yasufumi.,Tamai, Katsuto. (2019). Cut-C: cleavage under tethered nuclease for conformational capture. BMC Genomics
-1. Abbas Roayaei Ardakany, Ferhat Ay, Stefano Lonardi, Selfish: discovery of differential chromatin interactions via a self-similarity measure, Bioinformatics, Volume 35, Issue 14, July 2019, Pages i145–i153, https://doi.org/10.1093/bioinformatics/btz362
-1. Li, Xiao, Ziyang An, and Zhihua Zhang. "Comparison of computational methods for 3D genome analysis at single-cell Hi-C level." Methods (2019).
+1. Alavattam, Kris G., et al. "Attenuated chromatin compartmentalization in meiosis and its maturation in sperm development." Nature structural & molecular biology 26.3 (2019): 175-184.
 1. Luo Z, Wang X, Jiang H, et al. Reorganized 3D genome structures support transcriptional regulation in mouse spermatogenesis[J]. Iscience, 2020: 101034.
 1. Johnstone, Sarah E., et al. "Large-Scale Topological Changes Restrain Malignant Progression in Colorectal Cancer." Cell (2020).
+1. Zhen, Tao, et al. "RUNX1 and CBFβ-SMMHC transactivate target genes together in abnormal myeloid progenitors for leukemia development." Blood, The Journal of the American Society of Hematology 136.21 (2020): 2373-2385.
+1. Ma, Sai, et al. "Chromatin Potential Identified by Shared Single-Cell Profiling of RNA and Chromatin." Cell 183.4 (2020): 1103-1116. 
 
 --------
 ## cLoops updates
