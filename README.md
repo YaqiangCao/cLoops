@@ -14,6 +14,8 @@ Preprint bioRxiv:
 
 You can also find the cLoops wiki in Chinese [here](https://github.com/YaqiangCao/cLoops/wiki)
 
+*** Please kindly refer to [cLoops2](https://github.com/YaqiangCao/cLoops2) for more analytical modules. ***
+
 --------
 ## Install
 If you are familar with [conda](https://docs.conda.io/en/latest/), cLoops could be installed very easily with following after clone and cd in it. 
