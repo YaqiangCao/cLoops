@@ -4,6 +4,8 @@
 [![Stars](https://img.shields.io/github/stars/YaqiangCao/cLoops?logo=GitHub&color=yellow)](https://github.com/YaqiangCao/cLoops/stargazers) 
 [![LOC](https://tokei.rs/b1/github/YaqiangCao/cLoops?category=code)](https://github.com/Aaronepower/tokei)
  <img alt="ViewCount" src="https://views.whatilearened.today/views/github/YaqiangCao/cLoops.svg">
+[![GitHub Clones](https://img.shields.io/badge/dynamic/json?color=success&label=Clone&query=count&url=https://gist.githubusercontent.com/YaqiangCao/35ae75af5d9b37d9159a108dabfef956/raw/clone.json&logo=github)](https://github.com/MShawon/github-clone-count-badge)
+
 
 </div>
 
