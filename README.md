@@ -1,3 +1,12 @@
+<div align="center">
+
+[![Language](https://img.shields.io/github/languages/top/YaqiangCao/cLoops)](https://img.shields.io/github/languages/top/YaqiangCao/cLoops) 
+[![Stars](https://img.shields.io/github/stars/YaqiangCao/cLoops?logo=GitHub&color=yellow)](https://github.com/YaqiangCao/cLoops/stargazers) 
+[![LOC](https://tokei.rs/b1/github/YaqiangCao/cLoops?category=code)](https://github.com/Aaronepower/tokei)
+
+</div>
+
+
 # cLoops: loop-calling for ChIA-PET, Hi-C, HiChIP and Trac-looping
 ![](https://github.com/YaqiangCao/cLoops/raw/master/pngs/cLoops.png)
 
